@@ -8,12 +8,12 @@ export default function Home() {
     <div style={{ fontFamily: "sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       
       {/* ===== NAVBAR ===== */}
-      <header style={{ background: "#3d3d3d", padding: "16px 40px" }}>
-        <span style={{ color: "white", fontWeight: "bold", fontSize: "1rem" }}>Logo</span>
+      <header style={{ background: "#f4f4f4", padding: "16px 40px" }}>
+        <span style={{ color: "black", fontWeight: "bold", fontSize: "1rem" }}>Logo</span>
       </header>
 
       {/* ===== HERO SECTION ===== */}
-      <main style={{ flex: 1, padding: "60px 60px 40px 60px", background: "#fff" }}>
+      <main style={{ flex: 1, padding: "60px 60px 40px 60px", background: "#ffffff" }}>
         
         {/* Hero atas */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "60px" }}>
@@ -32,7 +32,7 @@ export default function Home() {
               onClick={() => navigate("/posture-check")}
               style={{
                 padding: "18px 36px",
-                background: "black",
+                background: "#1b9dcb",
                 color: "white",
                 border: "none",
                 borderRadius: "40px",
@@ -47,67 +47,77 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ===== CARDS SECTION ===== */}
-        <div style={{ display: "flex", gap: "24px", alignItems: "stretch" }}>
-
-          {/* Card A - Correct Body Posture */}
-          <div onClick={() => navigate("/correct-body-posture")} style={cardStyle("#e8f5e9")}>
-            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
-              <span style={badgeStyle("#4caf50")}>A</span>
-              <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Correct Body Posture</strong>
-            </div>
-            <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
-              Understand the fundamentals of healthy posture through proper sitting, standing, and spine alignment.
-            </p>
-          </div>
-
-          {/* Card B - Impact of Bad Posture */}
-          <div onClick={() => navigate("/impact-of-bad-posture")} style={cardStyle("#fce4ec")}>
-            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
-              <span style={badgeStyle("#e53935")}>B</span>
-              <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Impact of Bad Posture</strong>
-            </div>
-            <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
-              Discover how unhealthy posture habits affect physical health, daily performance, and long-term well-being.
-            </p>
-          </div>
-
-          {/* Card C - Ideal Posture Angel */}
-          <div onClick={() => navigate("/ideal-posture-angel")} style={cardStyle("#e3eaf5")}>
-            <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
-              <span style={badgeStyle("#3b6cbf")}>A</span>
-              <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Ideal Posture Angel</strong>
-            </div>
-            <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
-              Learn how posture angles such as head, shoulder, and spinal alignment are used to evaluate healthy body posture.
-            </p>
-          </div>
-
-          {/* Guide for Posture Check */}
-          <div
-            onClick={() => navigate("/guide-for-posture-check")}
-            style={{
-              flex: 1,
-              height: "200px",
-              background: "#faeb00",
-              borderRadius: "20px",
-              padding: "24px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "opacity 0.2s",
-            }}
+        {/* Card Section WRAPPER */}
+        <div
+          style={{
+            background: "#d1ebf4",
+            padding: "40px 50px",
+            borderRadius: "0px",
+            marginTop: "40px",
+          }}
           >
-            <strong style={{ fontSize: "1.3rem", textAlign: "center", lineHeight: 1.4 }}>
-              Guide for Posture Check
-            </strong>
+          {/* ===== CARDS SECTION ===== */}
+          <div style={{ display: "flex", gap: "24px", alignItems: "stretch" }}>
+
+            {/* Card A - Correct Body Posture */}
+            <div onClick={() => navigate("/correct-body-posture")} style={cardStyle("#ffffff")}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+                <span style={badgeStyle("#4caf50")}>A</span>
+                <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Correct Body Posture</strong>
+              </div>
+              <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
+                Understand the fundamentals of healthy posture through proper sitting, standing, and spine alignment.
+              </p>
+            </div>
+
+            {/* Card B - Impact of Bad Posture */}
+            <div onClick={() => navigate("/impact-of-bad-posture")} style={cardStyle("#ffffff")}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+                <span style={badgeStyle("#e53935")}>B</span>
+                <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Impact of Bad Posture</strong>
+              </div>
+              <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
+                Discover how unhealthy posture habits affect physical health, daily performance, and long-term well-being.
+              </p>
+            </div>
+
+            {/* Card C - Ideal Posture Angel */}
+            <div onClick={() => navigate("/ideal-posture-angel")} style={cardStyle("#ffffff")}>
+              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
+                <span style={badgeStyle("#3b6cbf")}>A</span>
+                <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Ideal Posture Angel</strong>
+              </div>
+              <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
+                Learn how posture angles such as head, shoulder, and spinal alignment are used to evaluate healthy body posture.
+              </p>
+            </div>
+
+            {/* Guide for Posture Check */}
+            <div
+              onClick={() => navigate("/guide-for-posture-check")}
+              style={{
+                flex: 1,
+                height: "200px",
+                background: "#faeb00",
+                borderRadius: "20px",
+                padding: "24px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "opacity 0.2s",
+              }}
+            >
+              <strong style={{ fontSize: "1.3rem", textAlign: "center", lineHeight: 1.4 }}>
+                Guide for Posture Check
+              </strong>
+            </div>
           </div>
         </div>
       </main>
 
       {/* ===== FOOTER ===== */}
-      <footer style={{ background: "black", color: "white", padding: "20px 60px", fontSize: "0.95rem" }}>
+      <footer style={{ background: "#36a7cf", color: "white", padding: "20px 60px", fontSize: "0.95rem" }}>
         2026
       </footer>
     </div>
