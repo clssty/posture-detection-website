@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import React from "react";
 
 export default function Home() {
   const navigate = useNavigate();
+
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   return (
     <div style={{ fontFamily: "sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -30,16 +34,29 @@ export default function Home() {
             </p>
             <button
               onClick={() => navigate("/posture-check")}
+              onMouseEnter={() => setIsButtonHovered(true)}
+              onMouseLeave={() => setIsButtonHovered(false)}
               style={{
                 padding: "18px 36px",
-                background: "#1b9dcb",
+
+                background: isButtonHovered ? "black" : "#36a7cf",
+
                 color: "white",
                 border: "none",
                 borderRadius: "40px",
+
                 fontWeight: "bold",
                 fontSize: "1.1rem",
+
                 cursor: "pointer",
                 width: "fit-content",
+
+                transition: "0.25s ease",
+
+                transform:
+                  isButtonHovered
+                    ? "scale(1.08)"
+                    : "scale(1)",
               }}
             >
               Analyze My Posture
@@ -59,59 +76,314 @@ export default function Home() {
           {/* ===== CARDS SECTION ===== */}
           <div style={{ display: "flex", gap: "24px", alignItems: "stretch" }}>
 
-            {/* Card A - Correct Body Posture */}
-            <div onClick={() => navigate("/correct-body-posture")} style={cardStyle("#ffffff")}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
-                <span style={badgeStyle("#4caf50")}>A</span>
-                <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Correct Body Posture</strong>
+            {/* CARD A - CORRECT BODY POSTURE */}
+            <div
+              onClick={() => navigate("/correct-body-posture")}
+              onMouseEnter={() => setHoveredCard("A")}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                background: hoveredCard === "A" ? "#36a7cf" : "white",
+                color: hoveredCard === "A" ? "white" : "black",
+
+                padding: "24px",
+                borderRadius: "20px",
+
+                width: "370px",
+                minHeight: "180px",
+
+                transition: "0.3s ease",
+                cursor: "pointer",
+
+                transform:
+                  hoveredCard === "A"
+                    ? "translateY(-5px)"
+                    : "translateY(0)",
+
+                boxShadow:
+                  hoveredCard === "A"
+                    ? "0 10px 25px rgba(0,0,0,0.15)"
+                    : "0 4px 10px rgba(0,0,0,0.05)",
+              }}
+            >
+              {/* Icon + Title Row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  marginBottom: "18px",
+                }}
+              >
+                {/* Circle Icon */}
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "#6dbd4a",
+                    color: "white",
+
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+
+                    fontWeight: "bold",
+                    flexShrink: 0,
+                  }}
+                >
+                  A
+                </div>
+
+                {/* Title */}
+                <h3
+                  style={{
+                    color: hoveredCard === "A" ? "white" : "black",
+                    margin: 0,
+                    fontSize: "1.3rem",
+                    fontWeight: "bold", 
+                    lineHeight: "1.3",
+                  }}
+                >
+                  Correct body posture
+                </h3>
               </div>
-              <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
-                Understand the fundamentals of healthy posture through proper sitting, standing, and spine alignment.
+
+              {/* Description */}
+              <p
+                style={{
+                  color: hoveredCard === "A" ? "white" : "#444",
+                  fontSize: "1rem",
+                  lineHeight: "1.6",
+                  margin: 0,
+                }}
+              >
+                Understand the fundamentals of healthy posture through
+                proper sitting, standing, and spine alignment.
               </p>
             </div>
 
-            {/* Card B - Impact of Bad Posture */}
-            <div onClick={() => navigate("/impact-of-bad-posture")} style={cardStyle("#ffffff")}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
-                <span style={badgeStyle("#e53935")}>B</span>
-                <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Impact of Bad Posture</strong>
+            {/* CARD  B - IMPACT OF BAD POSTURE */}
+            <div
+              onClick={() => navigate("/impact-of-bad-posture")}
+              onMouseEnter={() => setHoveredCard("B")}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                background: hoveredCard === "B" ? "#36a7cf" : "white",
+                color: hoveredCard === "B" ? "white" : "black",
+
+                padding: "24px",
+                borderRadius: "20px",
+
+                width: "370px",
+                minHeight: "180px",
+
+                transition: "0.3s ease",
+                cursor: "pointer",
+
+                transform:
+                  hoveredCard === "B"
+                    ? "translateY(-5px)"
+                    : "translateY(0)",
+
+                boxShadow:
+                  hoveredCard === "B"
+                    ? "0 10px 25px rgba(0,0,0,0.15)"
+                    : "0 4px 10px rgba(0,0,0,0.05)",
+              }}
+            >
+              {/* Icon + Title Row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  marginBottom: "18px",
+                }}
+              >
+                {/* Circle Icon */}
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "#ef4444",
+                    color: "white",
+
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+
+                    fontWeight: "bold",
+                    flexShrink: 0,
+                  }}
+                >
+                  B
+                </div>
+
+                {/* Title */}
+                <h3
+                  style={{
+                    color: hoveredCard === "B" ? "white" : "black",
+                    margin: 0,
+                    fontSize: "1.4rem",
+                    fontWeight: "bold",
+                    lineHeight: "1.3",
+                  }}
+                >
+                  Impact of Bad Posture
+                </h3>
               </div>
-              <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
-                Discover how unhealthy posture habits affect physical health, daily performance, and long-term well-being.
+
+              {/* Description */}
+              <p
+                style={{
+                  color: hoveredCard === "B" ? "white" : "#444",
+                  fontSize: "1rem",
+                  lineHeight: "1.6",
+                  margin: 0,
+                }}
+              >
+                Discover how unhealthy posture habits affect physical
+                health, daily performance, and long-term well-being.
               </p>
             </div>
 
-            {/* Card C - Ideal Posture Angel */}
-            <div onClick={() => navigate("/ideal-posture-angel")} style={cardStyle("#ffffff")}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "20px" }}>
-                <span style={badgeStyle("#3b6cbf")}>A</span>
-                <strong style={{ fontSize: "1.1rem", lineHeight: 1.3 }}>Ideal Posture Angel</strong>
+            {/* CARD C - IDEAL POSTURE ANGLE */}
+            <div
+              onClick={() => navigate("/ideal-posture-angel")}
+              onMouseEnter={() => setHoveredCard("C")}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                background: hoveredCard === "C" ? "#36a7cf" : "white",
+                color: hoveredCard === "C" ? "white" : "black",
+
+                padding: "24px",
+                borderRadius: "20px",
+
+                width: "370px",
+                minHeight: "180px",
+
+                transition: "0.3s ease",
+                cursor: "pointer",
+
+                transform:
+                  hoveredCard === "C"
+                    ? "translateY(-5px)"
+                    : "translateY(0)",
+
+                boxShadow:
+                  hoveredCard === "C"
+                    ? "0 10px 25px rgba(0,0,0,0.15)"
+                    : "0 4px 10px rgba(0,0,0,0.05)",
+              }}
+            >
+              {/* Icon + Title Row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "14px",
+                  marginBottom: "18px",
+                }}
+              >
+                {/* Circle Icon */}
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "#3b82f6",
+                    color: "white",
+
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+
+                    fontWeight: "bold",
+                    flexShrink: 0,
+                  }}
+                >
+                  C
+                </div>
+
+                {/* Title */}
+                <h3
+                  style={{
+                    color: hoveredCard === "C" ? "white" : "black",
+                    margin: 0,
+                    fontSize: "1.4rem",
+                    fontWeight: "bold",
+                    lineHeight: "1.3",
+                  }}
+                >
+                  Ideal Posture Angle
+                </h3>
               </div>
-              <p style={{ fontSize: "1rem", color: "#555", margin: 0, lineHeight: 1.6 }}>
-                Learn how posture angles such as head, shoulder, and spinal alignment are used to evaluate healthy body posture.
+
+              {/* Description */}
+              <p
+                style={{
+                  color: hoveredCard === "C" ? "white" : "#444",
+                  fontSize: "1rem",
+                  lineHeight: "1.6",
+                  margin: 0,
+                }}
+              >
+                Learn how posture angles such as head, shoulder,
+                and spinal alignment are used to evaluate healthy
+                body posture.
               </p>
             </div>
 
-            {/* Guide for Posture Check */}
+
+            {/* Card D - Guide for Posture Check */}
             <div
               onClick={() => navigate("/guide-for-posture-check")}
+              onMouseEnter={() => setHoveredCard("D")}
+              onMouseLeave={() => setHoveredCard(null)}
               style={{
-                flex: 1,
-                height: "200px",
-                background: "#faeb00",
-                borderRadius: "20px",
+                background: "#fff200",
+                color: "black",
+
                 padding: "24px",
+                borderRadius: "20px",
+
+                width: "260px",
+                minHeight: "180px",
+
+                transition: "0.3s ease",
                 cursor: "pointer",
+
+                transform:
+                  hoveredCard === "D"
+                    ? "translateY(-10px)"
+                    : "translateY(0)",
+
+                boxShadow:
+                  hoveredCard === "D"
+                    ? "0 10px 25px rgba(0,0,0,0.15)"
+                    : "0 4px 10px rgba(0,0,0,0.05)",
+
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "opacity 0.2s",
+                textAlign: "center",
               }}
             >
-              <strong style={{ fontSize: "1.3rem", textAlign: "center", lineHeight: 1.4 }}>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "1.3rem",
+                  fontWeight: "bold",
+                  lineHeight: "1.3",
+                }}
+              >
                 Guide for Posture Check
-              </strong>
+              </h3>
             </div>
+
+
+
           </div>
         </div>
       </main>
