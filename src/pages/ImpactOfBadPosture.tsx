@@ -120,11 +120,6 @@ const sections: SectionData[] = [
   },
 ];
 
-const funFacts = [
-  { text: "Teenagers use gadgets for 5–7 hours per day on average" },
-  { icon: "⚖️", text: "The human head (4–5 kg) can feel like 27 kg when bent forward" },
-  { icon: "📊", text: "More than 80% of adolescents experience body pain from posture" },
-];
 
 // ──────────────────────────────────────────────
 //  HELPERS
@@ -675,7 +670,7 @@ export default function ImpactOfBadPosture() {
           />
         </div>
       )}
-      
+
     </div>
   );
 }
