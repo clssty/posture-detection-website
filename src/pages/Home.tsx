@@ -381,9 +381,6 @@ export default function Home() {
                 Guide for Posture Check
               </h3>
             </div>
-
-
-
           </div>
         </div>
       </main>
@@ -394,38 +391,4 @@ export default function Home() {
       </footer>
     </div>
   );
-}
-
-// ===== HELPER FUNCTIONS =====
-function cardStyle(bg: string): React.CSSProperties {
-  return {
-    flex: 1,
-    background: bg,
-    borderRadius: "20px",
-    padding: "28px",
-    cursor: "pointer",
-    transition: "transform 0.2s, box-shadow 0.2s",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    boxSizing: "border-box",
-  };
-}
-
-function badgeStyle(color: string): React.CSSProperties {
-  return {
-    background: color,
-    color: "white",
-    borderRadius: "50%",
-    width: "44px",
-    height: "44px",
-    minWidth: "44px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "bold",
-    flexShrink: 0,
-    fontSize: "1rem",
-  };
 }

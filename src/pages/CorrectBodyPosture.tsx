@@ -5,9 +5,9 @@ import React from "react";
 // ──────────────────────────────────────────────
 //  IMAGE IMPORTS
 // ──────────────────────────────────────────────
-import standingImg from "../assets/Standing_Posture_Good.jpeg";
-import sittingImg from "../assets/Sitting_Posture_Good.jpg";
-import spineImg from "../assets/Spine_Alignment.png";
+import standingImg from "../assets/A/Standing_Posture_Good.jpeg";
+import sittingImg from "../assets/A/Sitting_Posture_Good.jpg";
+import spineImg from "../assets/A/Spine_Alignment.png";
 
 // ──────────────────────────────────────────────
 //  TYPES
@@ -44,9 +44,21 @@ const spineChecks: CheckItem[] = [
 ];
 
 const funFacts = [
-  { icon: "🧠", text: "The human head weighs about 4–5 kg" },
-  { icon: "⚠️", text: "Slouching can increase spinal pressure up to 2× more" },
-  { icon: "✨", text: "Good posture can improve focus and confidence" },
+  {
+    text: "The human head weighs about 4–5 kg",
+    hoverColor: "#ffd6ec",
+    shadowColor: "rgba(255,105,180,0.18)",
+  },
+  {
+    text: "Slouching can increase spinal pressure up to 2× more",
+    hoverColor: "#fff4bf",
+    shadowColor: "rgba(255,215,0,0.18)",
+  },
+  {
+    text: "Good posture can improve focus and confidence",
+    hoverColor: "#ffe2b8",
+    shadowColor: "rgba(255,140,0,0.18)",
+  },
 ];
 
 // ──────────────────────────────────────────────
@@ -82,6 +94,7 @@ function PostureSection({
   imgAlt,
   imgRight = false,
   accent = "#36a7cf",
+  onImageClick,
 }: {
   number: string;
   title: string;
@@ -91,6 +104,7 @@ function PostureSection({
   imgAlt: string;
   imgRight?: boolean;
   accent?: string;
+  onImageClick?: (img: string) => void;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -137,7 +151,14 @@ function PostureSection({
       <img
         src={imgSrc}
         alt={imgAlt}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        onClick={() => onImageClick?.(imgSrc)}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+          cursor: "pointer",
+        }}
       />
     </div>
   );
@@ -162,6 +183,9 @@ export default function CorrectBodyPosture() {
   const navigate = useNavigate();
   const [hoveredBtn, setHoveredBtn] = useState<string | null>(null);
 
+  // Image full
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   return (
     <div style={{ fontFamily: "sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column", background: "#ffffff" }}>
 
@@ -180,24 +204,55 @@ export default function CorrectBodyPosture() {
         background: "linear-gradient(135deg, #d1ebf4 0%, #eaf6fb 60%, #ffffff 100%)",
         padding: "56px 64px 48px 64px",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
-          <div style={{
-            width: "44px", height: "44px", borderRadius: "50%",
-            background: "#6dbd4a", color: "white",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontWeight: "900", fontSize: "1.2rem",
-          }}>A</div>
-          <span style={{ color: "#36a7cf", fontWeight: "700", fontSize: "0.95rem", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-            Chapter A
-          </span>
-        </div>
-        <h1 style={{ margin: "0 0 16px 0", fontSize: "3.2rem", fontWeight: "900", color: "#1a202c", lineHeight: 1.1, maxWidth: "640px" }}>
-          Correct Body Posture
-        </h1>
-        <p style={{ margin: 0, fontSize: "1.1rem", color: "#4a5568", lineHeight: 1.75, maxWidth: "660px" }}>
-          Correct posture is the position of the body when standing, sitting, or moving while
-          maintaining the <strong>natural curve of the spine</strong>, so the body does not experience
-          excessive strain.
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "18px",
+            marginBottom: "20px",
+          }}
+        >
+          {/* Circle A */}
+          <div
+            style={{
+              width: "52px",
+              height: "52px",
+              borderRadius: "50%",
+              background: "#6dbd4a",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "900",
+              fontSize: "1.3rem",
+              flexShrink: 0,
+            }}
+          >
+            A
+          </div>
+
+          {/* Main Title */}
+          <h1
+            style={{
+              margin: 0,
+              fontSize: "3.2rem",
+              fontWeight: "900",
+              color: "#1a202c",
+              lineHeight: 1.1,
+            }}
+          >
+            Correct Body Posture
+          </h1>
+        </div>        
+        <p style={{ 
+          margin: 0, 
+          marginLeft: "70px",
+          fontSize: "1.1rem", 
+          color: "#4a5568", 
+          lineHeight: 1.9, 
+          maxWidth: "660px" 
+          }}>
+          Correct posture is the position of the body when standing, sitting, or moving while <strong>maintaining the natural curve of the spine</strong>, so the body does not experience excessive strain.
         </p>
       </div>
 
@@ -235,6 +290,7 @@ export default function CorrectBodyPosture() {
           imgAlt="Standing posture comparison — good vs poor"
           imgRight={false}
           accent="#36a7cf"
+          onImageClick={setSelectedImage}
         />
 
         {/* Thin divider */}
@@ -250,6 +306,7 @@ export default function CorrectBodyPosture() {
           imgAlt="Correct sitting posture at a desk"
           imgRight={true}
           accent="#36a7cf"
+          onImageClick={setSelectedImage}
         />
 
         <div style={{ height: "1px", background: "#e2e8f0" }} />
@@ -264,6 +321,7 @@ export default function CorrectBodyPosture() {
           imgAlt="Spine alignment — cervical, thoracic and lumbar curves"
           imgRight={false}
           accent="#36a7cf"
+          onImageClick={setSelectedImage}
         />
 
         {/* ── FUN FACTS ── */}
@@ -284,25 +342,48 @@ export default function CorrectBodyPosture() {
             textTransform: "uppercase",
             marginBottom: "20px",
           }}>
-            💡 Fun Facts
+            Fun Facts
           </div>
           <h2 style={{ margin: "0 0 32px 0", fontSize: "1.6rem", fontWeight: "800", color: "#1a202c" }}>
             Did you know?
           </h2>
           <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
             {funFacts.map((fact, i) => (
-              <div key={i} style={{
-                flex: "1 1 220px",
-                background: "white",
-                borderRadius: "16px",
-                padding: "28px 24px",
-                boxShadow: "0 4px 16px rgba(54,167,207,0.12)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "12px",
-              }}>
-                <span style={{ fontSize: "2rem" }}>{fact.icon}</span>
-                <p style={{ margin: 0, fontWeight: "600", color: "#2d3748", fontSize: "0.97rem", lineHeight: 1.55 }}>
+              <div
+                key={i}
+                style={{
+                  flex: "1 1 220px",
+                  background: "white",
+                  borderRadius: "16px",
+                  padding: "32px 28px",
+                  boxShadow: "0 4px 16px rgba(54,167,207,0.12)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  minHeight: "120px",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-8px)";
+                  e.currentTarget.style.background = fact.hoverColor;
+                  e.currentTarget.style.boxShadow = `0 12px 28px ${fact.shadowColor}`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.background = "white";
+                  e.currentTarget.style.boxShadow = "0 4px 16px rgba(54,167,207,0.12)";
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    fontWeight: "700",
+                    color: "#2d3748",
+                    fontSize: "1rem",
+                    lineHeight: 1.7,
+                  }}
+                >
                   {fact.text}
                 </p>
               </div>
@@ -360,7 +441,7 @@ export default function CorrectBodyPosture() {
           onMouseLeave={() => setHoveredBtn(null)}
           style={navBtn(hoveredBtn === "home", false)}
         >
-          🏠 Home
+         Home
         </button>
         <div style={{ flex: 1 }} />
         <button
@@ -374,12 +455,45 @@ export default function CorrectBodyPosture() {
       </div>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background: "#36a7cf", color: "white", padding: "20px 64px", fontSize: "0.95rem" }}>
-        2026
-      </footer>
+<footer style={{ background: "#36a7cf", color: "white", padding: "20px 60px", fontSize: "0.95rem" }}>
+  2026
+</footer>
 
-    </div>
-  );
+{/* ===== IMAGE MODAL ===== */}
+{selectedImage && (
+  <div
+    onClick={() => setSelectedImage(null)}
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.85)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+      padding: "20px",
+      cursor: "pointer",
+    }}
+  >
+    <img
+      src={selectedImage}
+      alt="Preview"
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        maxWidth: "90%",
+        maxHeight: "90%",
+        borderRadius: "18px",
+        boxShadow: "0 0 30px rgba(0,0,0,0.4)",
+      }}
+    />
+  </div>
+)}
+
+</div>
+);
 }
 
 // ──────────────────────────────────────────────
