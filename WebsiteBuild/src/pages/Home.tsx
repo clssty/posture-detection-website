@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import React from "react";
+/*import React from "react";*/
 
 export default function Home() {
   const navigate = useNavigate();
