@@ -17,51 +17,33 @@ export default function IdealPostureAngel() {
     <div
       style={{
         fontFamily: "sans-serif",
-        background: "#f8fafc",
+        background: "#ffffff",
         minHeight: "100vh",
       }}
     >
-      {/* ── HERO SECTION ── */}
+      {/* ── HERO BANNER ── */}
       <div
         style={{
           background:
-            "linear-gradient(135deg, #dbeafe 0%, #eff6ff 60%, #ffffff 100%)",
-          padding: "60px 70px",
+            "linear-gradient(135deg, #60a5fa 0%, #dbeafe 70%, #ffffff 100%)",
+          padding: "56px 64px 48px 64px",
+          textAlign: "center",
         }}
       >
         <div
           style={{
             display: "flex",
-            alignItems: "flex-start",
+            alignItems: "center",
             gap: "18px",
+            flexWrap: "wrap",
+            justifyContent: "center",
           }}
         >
-          {/* Circle C */}
-          <div
-            style={{
-              width: "54px",
-              height: "54px",
-              borderRadius: "50%",
-              background: "#2563eb",
-              color: "white",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontWeight: "900",
-              fontSize: "1.5rem",
-              marginTop: "8px",
-              flexShrink: 0,
-            }}
-          >
-            C
-          </div>
-
-          {/* Hero Text */}
-          <div style={{ maxWidth: "780px" }}>
+          <div style={{ maxWidth: "1100px" }}>
             <h1
               style={{
-                margin: "0 0 18px 0",
-                fontSize: "3.2rem",
+                margin: "0 auto 40px auto",
+                fontSize: "4rem",
                 fontWeight: "900",
                 color: "#0f172a",
                 lineHeight: 1.1,
@@ -72,79 +54,87 @@ export default function IdealPostureAngel() {
 
             <p
               style={{
-                margin: 0,
-                fontSize: "1.08rem",
-                lineHeight: 1.8,
+                margin: "0 auto",
+                fontSize: "1.5rem",
                 color: "#475569",
+                lineHeight: 1.9,
+                maxWidth: "1000px",
               }}
             >
-              Ideal posture angles are measurements of body alignment
-              involving the head, shoulders, and spine to determine
-              whether posture is healthy or indicates potential problems.
+              Ideal posture angles are measurements of body alignment involving
+              the head, shoulders, and spine to determine whether posture is
+              healthy or indicates potential problems.
             </p>
           </div>
         </div>
+      </div>
 
-        {/* STAT CARDS */}
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            marginTop: "42px",
-            flexWrap: "wrap",
-          }}
-        >
-          {[
-            {
-              title: "50°–55°",
-              desc: "Ideal Craniovertebral Angle",
-              color: "#2563eb",
-            },
-            {
-              title: "50°–53°",
-              desc: "Ideal Shoulder Angle",
-              color: "#0ea5e9",
-            },
-            {
-              title: "20°",
-              desc: "Ideal Kyphosis Angle",
-              color: "#1d4ed8",
-            },
-          ].map((card, i) => (
+      {/* ── FLOATING STATS ── */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "24px",
+          flexWrap: "wrap",
+          marginTop: "100px",
+          marginBottom: "40px",
+          position: "relative",
+          zIndex: 5,
+        }}
+      >
+        {[
+          {
+            value: "50°–55°",
+            label: "Ideal Craniovertebral Angle",
+            color: "#2563eb",
+          },
+          {
+            value: "50°–53°",
+            label: "Ideal Shoulder Angle",
+            color: "#0ea5e9",
+          },
+          {
+            value: "20°",
+            label: "Ideal Kyphosis Angle",
+            color: "#1d4ed8",
+          },
+        ].map((stat, i) => (
+          <div
+            key={i}
+            style={{
+              background: "white",
+              borderRadius: "18px",
+              padding: "26px 36px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.10)",
+              borderTop: `4px solid ${stat.color}`,
+              minWidth: "360px",
+            }}
+          >
             <div
-              key={i}
               style={{
-                background: "white",
-                borderRadius: "18px",
-                padding: "24px 30px",
-                minWidth: "190px",
-                borderTop: `4px solid ${card.color}`,
-                boxShadow: "0 6px 16px rgba(0,0,0,0.07)",
+                fontSize: "4rem",
+                fontWeight: "900",
+                color: stat.color,
               }}
             >
-              <div
-                style={{
-                  fontSize: "2rem",
-                  fontWeight: "900",
-                  color: card.color,
-                }}
-              >
-                {card.title}
-              </div>
-
-              <div
-                style={{
-                  marginTop: "6px",
-                  color: "#64748b",
-                  fontSize: "0.88rem",
-                }}
-              >
-                {card.desc}
-              </div>
+              {stat.value}
             </div>
-          ))}
-        </div>
+
+            <div
+              style={{
+                fontSize: "1.25rem",
+                color: "#64748b",
+                marginTop: "4px",
+                lineHeight: 1.5,
+              }}
+            >
+              {stat.label}
+            </div>
+          </div>
+        ))}
       </div>
+
+
 
       {/* ── MAIN CONTENT ── */}
       <div
@@ -155,6 +145,35 @@ export default function IdealPostureAngel() {
           gap: "70px",
         }}
       >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              display: "inline-block",
+              background: "#dbeafe",
+              color: "#2563eb",
+              fontWeight: "700",
+              fontSize: "1rem",
+              padding: "8px 18px",
+              borderRadius: "40px",
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+              marginBottom: "16px",
+            }}
+          >
+            3 Key Angles to Understand
+          </div>
+
+  <h2
+    style={{
+      margin: 0,
+      fontSize: "2.5rem",
+      fontWeight: "800",
+      color: "#0f172a",
+    }}
+  >
+    Understanding ideal posture measurements
+  </h2>
+</div>
         {/* SECTION 1 */}
         <PostureSection
           number="01"
@@ -196,23 +215,24 @@ export default function IdealPostureAngel() {
         <div
           style={{
             background:
-              "linear-gradient(135deg, #1a202c 0%, #1a202c 100%)",
-            borderRadius: "30px",
-            padding: "56px 52px",
+              "linear-gradient(135deg, #fdfedb 0%, #ffffff 100%)",
+            borderRadius: "24px",
+            padding: "48px 52px",
           }}
         >
           {/* Label */}
           <div
             style={{
               display: "inline-block",
-              background: "#2563eb",
+              background: "#eb8525",
               color: "white",
-              padding: "6px 18px",
+              fontWeight: "700",
+              fontSize: "1.8rem",
+              padding: "5px 16px",
               borderRadius: "40px",
-              fontSize: "0.8rem",
-              fontWeight: "800",
-              letterSpacing: "0.04em",
-              marginBottom: "22px",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              marginBottom: "20px",
             }}
           >
             WHY IT MATTERS
@@ -221,10 +241,10 @@ export default function IdealPostureAngel() {
           {/* Title */}
           <h2
             style={{
-              fontSize: "2.4rem",
-              fontWeight: "900",
-              color: "#ffffff",
-              marginBottom: "34px",
+              margin: "0 0 32px 0",
+              fontSize: "2.5rem",
+              fontWeight: "800",
+              color: "#1a202c",
               lineHeight: 1.2,
             }}
           >
@@ -259,14 +279,16 @@ export default function IdealPostureAngel() {
                 style={{
                   flex: "1 1 240px",
                   background: "white",
-                  borderRadius: "22px",
-                  padding: "32px 28px",
-                  cursor: "pointer",
-                  transition: "all 0.25s ease",
+                  borderRadius: "18px",
+                  padding: "40px 30px",
+                  border: "2px solid transparent",
+                  boxSizing: "border-box",
                   display: "flex",
                   flexDirection: "column",
-                  gap: "16px",
-                  minHeight: "170px",
+                  gap: "14px",
+                  cursor: "pointer",
+                  transition: "all 0.25s ease",
+                  minHeight: "200px",
                   justifyContent: "center",
                 }}
                 onMouseEnter={(e) => {
@@ -284,12 +306,12 @@ export default function IdealPostureAngel() {
                 {/* Text */}
                 <div
                   style={{
-                    fontWeight: "800",
-                    fontSize: "1.02rem",
+                    fontWeight: "700",
+                    fontSize: "1.5rem",
                     lineHeight: 1.7,
                     color: "#1e293b",
                   }}
-                >
+                >                  
                   {item.text}
                 </div>
               </div>
@@ -308,24 +330,26 @@ export default function IdealPostureAngel() {
           <div
             style={{
               display: "inline-block",
-              background: "#6366f1",
+              background: "#2563eb",
               color: "white",
-              padding: "6px 16px",
-              borderRadius: "30px",
-              fontSize: "0.8rem",
               fontWeight: "700",
-              marginBottom: "18px",
+              fontSize: "1.8rem",
+              padding: "5px 16px",
+              borderRadius: "40px",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              marginBottom: "20px",
             }}
           >
-            💡 FUN FACTS
+            Fun Facts
           </div>
 
           <h2
             style={{
-              fontSize: "2.2rem",
+              fontSize: "1.6rem",
               fontWeight: "900",
               color: "#0f172a",
-              marginBottom: "28px",
+              marginBottom: "32px",
             }}
           >
             Did you know?
@@ -357,12 +381,17 @@ export default function IdealPostureAngel() {
                 style={{
                   flex: "1 1 240px",
                   background: "white",
-                  borderRadius: "20px",
-                  padding: "28px",
-                  fontWeight: "700",
-                  lineHeight: 1.7,
-                  transition: "0.25s ease",
+                  borderRadius: "18px",
+                  padding: "40px 30px",
+                  border: "2px solid transparent",
+                  boxSizing: "border-box",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "14px",
                   cursor: "pointer",
+                  transition: "all 0.25s ease",
+                  minHeight: "200px",
+                  justifyContent: "center",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = fact.hover;
@@ -375,7 +404,17 @@ export default function IdealPostureAngel() {
                     "translateY(0px)";
                 }}
               >
+                <p
+                style={{
+                  margin: 0,
+                  fontWeight: "700",
+                  color: "#1e293b",
+                  fontSize: "1.5rem",
+                  lineHeight: 1.7,
+                }}
+              >
                 {fact.text}
+              </p>
               </div>
             ))}
           </div>
@@ -484,34 +523,50 @@ function PostureSection({
     >
       {/* TEXT */}
       <div style={{ flex: 1, minWidth: "320px" }}>
+        {/* Number badge + title */}
         <div
           style={{
-            color: "#2563eb",
-            fontWeight: "900",
-            marginBottom: "12px",
-            letterSpacing: "0.08em",
+            display: "flex",
+            alignItems: "center",
+            gap: "14px",
+            marginBottom: "20px",
           }}
         >
-          {number}
+          <div
+            style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "50%",
+              background: "#2563eb",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "900",
+              fontSize: "1.1rem",
+              flexShrink: 0,
+            }}
+          >
+            {number}
+          </div>
+
+          <h2
+            style={{
+              margin: 0,
+              fontSize: "2.5rem",
+              fontWeight: "800",
+              color: "#1a202c",
+            }}
+          >
+            {title}
+          </h2>
         </div>
-
-        <h2
-          style={{
-            fontSize: "2.3rem",
-            fontWeight: "900",
-            marginBottom: "18px",
-            color: "#0f172a",
-          }}
-        >
-          {title}
-        </h2>
-
         <p
           style={{
             color: "#475569",
-            lineHeight: 1.9,
+            lineHeight: 1.75,
             marginBottom: "20px",
-            fontSize: "1.02rem",
+            fontSize: "1.5rem",
           }}
         >
           {description}
@@ -527,9 +582,10 @@ function PostureSection({
           <div
             style={{
               background: "#dcfce7",
-              padding: "14px 18px",
+              padding: "16px 20px",
               borderRadius: "14px",
               fontWeight: "700",
+              fontSize: "1.25rem",
               color: "#166534",
             }}
           >
@@ -539,12 +595,13 @@ function PostureSection({
           <div
             style={{
               background: "#fee2e2",
-              padding: "14px 18px",
+              padding: "16px 20px",
               borderRadius: "14px",
               fontWeight: "700",
+              fontSize: "1.25rem",
               color: "#991b1b",
             }}
-          >
+          >            
             ✕ {bad}
           </div>
         </div>
