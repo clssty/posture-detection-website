@@ -83,22 +83,25 @@ while True:
     # Pose Detection
     results = pose.process(rgb_frame)
 
-    # Draw landmarks
+    # =========================
+    # LANDMARKS
+    # =========================
+    
     if results.pose_landmarks:
 
         landmarks = results.pose_landmarks.landmark
 
         h, w, _ = frame.shape
 
-        nose = landmarks[
+        nose = landmarks[ #change HEADC -> CVA
             mp_pose.PoseLandmark.NOSE.value
         ]
 
-        shoulder = landmarks[
+        shoulder = landmarks[ #SHOULDER -> SA
             mp_pose.PoseLandmark.LEFT_SHOULDER.value
         ]
 
-        hip = landmarks[
+        hip = landmarks[ #change TORSO -> Torso Angle
             mp_pose.PoseLandmark.LEFT_HIP.value
         ]
 

@@ -27,6 +27,11 @@ interface SectionData {
   imgRight: boolean;
   accent: string;
   tag: string;
+
+  imageWidth?: string;
+  imageHeight?: string;
+  imageFit?: "cover" | "contain";
+  imageScale?: number;
 }
 
 // ──────────────────────────────────────────────
@@ -49,6 +54,9 @@ const sections: SectionData[] = [
     imgRight: false,
     accent: "#ef4444",
     tag: "Physical",
+
+    imageWidth: "650px",
+    imageHeight: "650px",
   },
   {
     number: "2",
@@ -65,6 +73,12 @@ const sections: SectionData[] = [
     imgRight: true,
     accent: "#f97316",
     tag: "Digital Habit",
+
+    imageWidth: "800px",
+    imageHeight: "400px",
+
+    imageFit: "contain",
+    imageScale: 1,
   },
   {
     number: "3",
@@ -81,6 +95,9 @@ const sections: SectionData[] = [
     imgRight: false,
     accent: "#8b5cf6",
     tag: "Vision",
+
+    imageWidth: "650px",
+    imageHeight: "580px",
   },
   {
     number: "4",
@@ -101,6 +118,9 @@ const sections: SectionData[] = [
     imgRight: true,
     accent: "#36a7cf",
     tag: "Mental Health",
+
+    imageWidth: "650px",
+    imageHeight: "580px",
   },
   {
     number: "5",
@@ -117,6 +137,9 @@ const sections: SectionData[] = [
     imgRight: false,
     accent: "#dc2626",
     tag: "Long-Term",
+
+    imageWidth: "650px",
+    imageHeight: "580px",
   },
 ];
 
@@ -161,7 +184,7 @@ function BulletList({ items, accent }: { items: BulletItem[]; accent: string }) 
   return (
     <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
       {items.map((item, i) => (
-        <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "0.97rem", lineHeight: 1.55, color: "#2d3748" }}>
+        <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "1.25rem", lineHeight: 1.55, color: "#2d3748" }}>
           <span style={{
             width: "22px", height: "22px", borderRadius: "50%",
             background: accent, color: "white",
@@ -216,10 +239,10 @@ function ImpactSection({
           display: "flex", alignItems: "center", justifyContent: "center",
           fontWeight: "900", fontSize: "1.1rem", flexShrink: 0,
         }}>{data.number}</div>
-        <h2 style={{ margin: 0, fontSize: "1.55rem", fontWeight: "800", color: "#1a202c" }}>{data.title}</h2>
+        <h2 style={{ margin: 0, fontSize: "2.5rem", fontWeight: "800", color: "#1a202c" }}>{data.title}</h2>
       </div>
 
-      <p style={{ margin: 0, fontSize: "0.97rem", color: "#4a5568", lineHeight: 1.75 }}>{data.description}</p>
+      <p style={{ margin: 0, fontSize: "1.5rem", color: "#4a5568", lineHeight: 1.75 }}>{data.description}</p>
 
       {/* Accent divider */}
       <div style={{ width: "48px", height: "3px", background: data.accent, borderRadius: "4px" }} />
@@ -239,8 +262,9 @@ function ImpactSection({
         })
       }
       style={{
-        flex: 1,
-        maxWidth: "480px",
+        flexShrink: 0,
+        width: data.imageWidth || "650px",
+        height: data.imageHeight || "520px",
         borderRadius: "20px",
         overflow: "hidden",
         boxShadow: hovered
@@ -254,7 +278,13 @@ function ImpactSection({
       <img
         src={data.imgSrc}
         alt={data.imgAlt}
-        style={{ width: "100%", height: "320px", objectFit: "cover", display: "block" }}
+        style={{ 
+          width: "100%",
+          height: data.imageHeight || "520px",
+          objectFit: data.imageFit || "cover",
+          transform: `scale(${data.imageScale ||1})`,
+          display: "block"
+        }}
       />
     </div>
   );
@@ -264,6 +294,7 @@ function ImpactSection({
       display: "flex",
       gap: "48px",
       alignItems: "center",
+      justifyContent: "center",
       flexWrap: "wrap",
     }}>
       {data.imgRight ? <>{textBlock}{imgBlock}</> : <>{imgBlock}{textBlock}</>}
@@ -300,45 +331,27 @@ export default function ImpactOfBadPosture() {
       {/* ── HERO BANNER ── */}
       <div
         style={{
-          background:
-            "linear-gradient(135deg, #fde8e8 0%, #fef3f0 60%, #ffffff 100%)",
+          background:"linear-gradient(135deg, #ef4444 0%, #fef3f0 70%, #ffffff 100%)",
           padding: "56px 64px 48px 64px",
+          textAlign: "center",
         }}
       >
         <div
           style={{
             display: "flex",
-            alignItems: "flex-start",
+            alignItems: "center",
             gap: "18px",
             flexWrap: "wrap",
+            justifyContent: "center",
           }}
         >
-          {/* Circle B */}
-          <div
-            style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-              background: "#ef4444",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "900",
-              fontSize: "1.4rem",
-              flexShrink: 0,
-              marginTop: "8px",
-            }}
-          >
-            B
-          </div>
 
-          {/* Hero Text */}
-          <div style={{ maxWidth: "760px" }}>
+          {/* Main Text */}
+          <div style={{ maxWidth: "1100px" }}>
             <h1
               style={{
-                margin: "0 0 18px 0",
-                fontSize: "3.3rem",
+                margin: "0 auto 40px auto",
+                fontSize: "4rem",
                 fontWeight: "900",
                 color: "#1a202c",
                 lineHeight: 1.1,
@@ -349,87 +362,88 @@ export default function ImpactOfBadPosture() {
 
             <p
               style={{
-                margin: 0,
-                fontSize: "1.08rem",
+                margin: "0 auto",
+                fontSize: "1.5rem",
                 color: "#4a5568",
-                lineHeight: 1.8,
-                maxWidth: "720px",
+                lineHeight: 1.9,
+                maxWidth: "1000px",
               }}
             >
-              Poor posture isn't just uncomfortable — it triggers a cascade of
-              physical, mental, and academic consequences that worsen over time
-              if left unaddressed.
+              Poor posture isn't just uncomfortable — it triggers a cascade of physical, mental, and academic consequences that worsen over time if left unaddressed.
             </p>
           </div>
         </div>
-
-        {/* Quick stats row */}
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            marginTop: "42px",
-            flexWrap: "wrap",
-          }}
-        >
-          {[
-            {
-              value: "73%",
-              label: "teens with low back pain",
-              color: "#ef4444",
-            },
-            {
-              value: "67%",
-              label: "teens with neck pain",
-              color: "#f97316",
-            },
-            {
-              value: "80%+",
-              label: "adolescents with body pain",
-              color: "#dc2626",
-            },
-          ].map((stat, i) => (
+      </div>
+      {/* ── FLOATING STATS ── */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "24px",
+          flexWrap: "wrap",
+          marginTop: "100px",
+          marginBottom: "40px",
+          position: "relative",
+          zIndex: 5,
+        }}
+      >
+        {[
+          {
+            value: "73%",
+            label: "teens with low back pain",
+            color: "#ef4444",
+          },
+          {
+            value: "67%",
+            label: "teens with neck pain",
+            color: "#f97316",
+          },
+          {
+            value: "80%+",
+            label: "adolescents with body pain",
+            color: "#dc2626",
+          },
+        ].map((stat, i) => (
+          <div
+            key={i}
+            style={{
+              background: "white",
+              borderRadius: "18px",
+              padding: "26px 36px",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.10)",
+              borderTop: `4px solid ${stat.color}`,
+              minWidth: "360px",
+            }}
+          >
             <div
-              key={i}
               style={{
-                background: "white",
-                borderRadius: "18px",
-                padding: "22px 30px",
-                boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
-                borderTop: `4px solid ${stat.color}`,
-                minWidth: "180px",
-                transition: "0.25s ease",
+                fontSize: "4rem",
+                fontWeight: "900",
+                color: stat.color,
               }}
             >
-              <div
-                style={{
-                  fontSize: "2rem",
-                  fontWeight: "900",
-                  color: stat.color,
-                }}
-              >
-                {stat.value}
-              </div>
-
-              <div
-                style={{
-                  fontSize: "0.84rem",
-                  color: "#718096",
-                  marginTop: "4px",
-                  lineHeight: 1.5,
-                }}
-              >
-                {stat.label}
-              </div>
+              {stat.value}
             </div>
-          ))}
-        </div>
+
+            <div
+              style={{
+                fontSize: "1.25rem",
+                color: "#718096",
+                marginTop: "4px",
+                lineHeight: 1.5,
+              }}
+            >
+              {stat.label}
+            </div>
+          </div>
+        ))}
       </div>
+
       {/* ── MAIN CONTENT ── */}
       <main style={{ flex: 1, padding: "64px 64px 80px 64px", display: "flex", flexDirection: "column", gap: "80px" }}>
 
         {/* Section label */}
-        <div>
+        <div style={{ textAlign: "center" }}>
           <div style={{
             display: "inline-block",
             background: "#fde8e8",
@@ -444,7 +458,7 @@ export default function ImpactOfBadPosture() {
           }}>
             6 Key Impacts to Understand
           </div>
-          <h2 style={{ margin: 0, fontSize: "2rem", fontWeight: "800", color: "#1a202c" }}>
+          <h2 style={{ margin: 0, fontSize: "2.5rem", fontWeight: "800", color: "#1a202c" }}>
             What bad posture does to your body & mind
           </h2>
         </div>
@@ -473,7 +487,7 @@ export default function ImpactOfBadPosture() {
             background: "#ef4444",
             color: "white",
             fontWeight: "700",
-            fontSize: "0.8rem",
+            fontSize: "1.8rem",
             padding: "5px 16px",
             borderRadius: "40px",
             letterSpacing: "0.08em",
@@ -510,7 +524,7 @@ export default function ImpactOfBadPosture() {
                   flex: "1 1 240px",
                   background: "white",
                   borderRadius: "18px",
-                  padding: "30px 24px",
+                  padding: "40px 30px",
                   border: "2px solid transparent",
                   boxSizing: "border-box",
                   display: "flex",
@@ -518,7 +532,7 @@ export default function ImpactOfBadPosture() {
                   gap: "14px",
                   cursor: "pointer",
                   transition: "all 0.25s ease",
-                  minHeight: "170px",
+                  minHeight: "200px",
                   justifyContent: "center",
                 }}
                 onMouseEnter={(e) => {
@@ -536,7 +550,7 @@ export default function ImpactOfBadPosture() {
                     margin: 0,
                     fontWeight: "700",
                     color: "#1e293b",
-                    fontSize: "1rem",
+                    fontSize: "1.5rem",
                     lineHeight: 1.7,
                   }}
                 >
@@ -552,7 +566,7 @@ export default function ImpactOfBadPosture() {
         <div style={{
           background: "#1a202c",
           borderRadius: "24px",
-          padding: "44px 52px",
+          padding: "52px 52px",
           display: "flex",
           alignItems: "flex-start",
           gap: "28px",
@@ -562,10 +576,11 @@ export default function ImpactOfBadPosture() {
             background: "#ef4444",
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, fontSize: "1.4rem",
-          }}>⚡</div>
+          }}>
+          </div>
           <div>
-            <h3 style={{ margin: "0 0 10px 0", fontSize: "1.2rem", fontWeight: "800", color: "white" }}>The Bottom Line</h3>
-            <p style={{ margin: 0, color: "#cbd5e0", fontSize: "1rem", lineHeight: 1.75 }}>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "1.5rem", fontWeight: "800", color: "white" }}>Conclusion</h3>
+            <p style={{ margin: 0, color: "#cbd5e0", fontSize: "1.25rem", lineHeight: 1.75 }}>
               Bad posture is not just a physical issue — it ripples into your mental health, academic life, and future well-being.
               The good news?{" "}
               <strong style={{ color: "#36a7cf" }}>Awareness and small corrections today can prevent serious problems tomorrow.</strong>

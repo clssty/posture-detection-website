@@ -70,7 +70,7 @@ function CheckList({ items }: { items: CheckItem[] }) {
   return (
     <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
       {items.map((item, i) => (
-        <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "0.97rem", lineHeight: 1.5, color: "#2d3748" }}>
+        <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px", fontSize: "1.25rem", lineHeight: 1.5, color: "#2d3748" }}>
           <span style={{
             width: "22px", height: "22px", borderRadius: "50%",
             background: "#36a7cf", color: "white",
@@ -95,6 +95,8 @@ function PostureSection({
   imgRight = false,
   accent = "#36a7cf",
   onImageClick,
+  imageWidth = "480px",
+  imageHeight = "auto",
 }: {
   number: string;
   title: string;
@@ -105,6 +107,8 @@ function PostureSection({
   imgRight?: boolean;
   accent?: string;
   onImageClick?: (img: string) => void;
+  imageWidth?: string;
+  imageHeight?: string;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -118,11 +122,11 @@ function PostureSection({
           display: "flex", alignItems: "center", justifyContent: "center",
           fontWeight: "900", fontSize: "1.1rem", flexShrink: 0,
         }}>{number}</div>
-        <h2 style={{ margin: 0, fontSize: "1.55rem", fontWeight: "800", color: "#1a202c" }}>{title}</h2>
+        <h2 style={{ margin: 0, fontSize: "2.5rem", fontWeight: "800", color: "#1a202c" }}>{title}</h2>
       </div>
 
       {description && (
-        <p style={{ margin: 0, fontSize: "0.97rem", color: "#4a5568", lineHeight: 1.7 }}>{description}</p>
+        <p style={{ margin: 0, fontSize: "1.5rem", color: "#4a5568", lineHeight: 1.7 }}>{description}</p>
       )}
 
       {/* Divider */}
@@ -145,7 +149,8 @@ function PostureSection({
           : "0 8px 24px rgba(0,0,0,0.10)",
         transition: "box-shadow 0.3s ease, transform 0.3s ease",
         transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        maxWidth: "480px",
+        maxWidth: imageWidth,
+        height: imageHeight,
       }}
     >
       <img
@@ -201,8 +206,9 @@ export default function CorrectBodyPosture() {
 
       {/* ── HERO BANNER ── */}
       <div style={{
-        background: "linear-gradient(135deg, #d1ebf4 0%, #eaf6fb 60%, #ffffff 100%)",
+        background: "linear-gradient(135deg, #6dbd4a 0%, #ffffff 80%, #ffffff 100%)",
         padding: "56px 64px 48px 64px",
+        textAlign: "center",
       }}>
         <div
           style={{
@@ -212,30 +218,11 @@ export default function CorrectBodyPosture() {
             marginBottom: "20px",
           }}
         >
-          {/* Circle A */}
-          <div
-            style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-              background: "#6dbd4a",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: "900",
-              fontSize: "1.3rem",
-              flexShrink: 0,
-            }}
-          >
-            A
-          </div>
-
           {/* Main Title */}
           <h1
             style={{
-              margin: 0,
-              fontSize: "3.2rem",
+              margin: "0 auto 20px auto",
+              fontSize: "4.0rem",
               fontWeight: "900",
               color: "#1a202c",
               lineHeight: 1.1,
@@ -245,12 +232,11 @@ export default function CorrectBodyPosture() {
           </h1>
         </div>        
         <p style={{ 
-          margin: 0, 
-          marginLeft: "70px",
-          fontSize: "1.1rem", 
+          margin: "0 auto", 
+          fontSize: "1.5rem", 
           color: "#4a5568", 
           lineHeight: 1.9, 
-          maxWidth: "660px" 
+          maxWidth: "1100px" 
           }}>
           Correct posture is the position of the body when standing, sitting, or moving while <strong>maintaining the natural curve of the spine</strong>, so the body does not experience excessive strain.
         </p>
@@ -260,13 +246,17 @@ export default function CorrectBodyPosture() {
       <main style={{ flex: 1, padding: "64px 64px 80px 64px", display: "flex", flexDirection: "column", gap: "80px" }}>
 
         {/* Section intro label */}
-        <div>
+        <div
+          style={{
+            textAlign: "center",
+          }}
+        >
           <div style={{
             display: "inline-block",
             background: "#d1ebf4",
             color: "#1a6f93",
             fontWeight: "700",
-            fontSize: "0.85rem",
+            fontSize: "1.20rem",
             padding: "6px 18px",
             borderRadius: "40px",
             letterSpacing: "0.06em",
@@ -275,10 +265,18 @@ export default function CorrectBodyPosture() {
           }}>
             Characteristics of Good Posture
           </div>
-          <h2 style={{ margin: 0, fontSize: "2rem", fontWeight: "800", color: "#1a202c" }}>
+          <h2 style={{ margin: 0, fontSize: "2.5rem", fontWeight: "800", color: "#1a6f93" }}>
             Three pillars to know
           </h2>
         </div>
+
+        <div
+          style={{
+            height: "1px",
+            background: "#e2e8f0",
+            margin: "40px 0 50px 0",
+          }}
+        />
 
         {/* ── 1. STANDING ── */}
         <PostureSection
@@ -291,6 +289,8 @@ export default function CorrectBodyPosture() {
           imgRight={false}
           accent="#36a7cf"
           onImageClick={setSelectedImage}
+          imageWidth="650px"
+          imageHeight="600px"
         />
 
         {/* Thin divider */}
@@ -307,6 +307,8 @@ export default function CorrectBodyPosture() {
           imgRight={true}
           accent="#36a7cf"
           onImageClick={setSelectedImage}
+          imageWidth="800px"
+          imageHeight="480px"
         />
 
         <div style={{ height: "1px", background: "#e2e8f0" }} />
@@ -322,6 +324,8 @@ export default function CorrectBodyPosture() {
           imgRight={false}
           accent="#36a7cf"
           onImageClick={setSelectedImage}
+          imageWidth="650px"
+          imageHeight="580px"
         />
 
         {/* ── FUN FACTS ── */}
@@ -335,12 +339,13 @@ export default function CorrectBodyPosture() {
             background: "#36a7cf",
             color: "white",
             fontWeight: "700",
-            fontSize: "0.8rem",
+            fontSize: "1.8rem",
             padding: "5px 16px",
             borderRadius: "40px",
             letterSpacing: "0.08em",
             textTransform: "uppercase",
             marginBottom: "20px",
+
           }}>
             Fun Facts
           </div>
@@ -380,7 +385,7 @@ export default function CorrectBodyPosture() {
                     margin: 0,
                     fontWeight: "700",
                     color: "#2d3748",
-                    fontSize: "1rem",
+                    fontSize: "1.50rem",
                     lineHeight: 1.7,
                   }}
                 >
@@ -402,13 +407,13 @@ export default function CorrectBodyPosture() {
         }}>
           <div style={{
             width: "52px", height: "52px", borderRadius: "50%",
-            background: "#36a7cf",
+            background: "#cf3636",
             display: "flex", alignItems: "center", justifyContent: "center",
             flexShrink: 0, fontSize: "1.4rem",
-          }}>🎯</div>
+          }}></div>
           <div>
-            <h3 style={{ margin: "0 0 10px 0", fontSize: "1.2rem", fontWeight: "800", color: "white" }}>Conclusion</h3>
-            <p style={{ margin: 0, color: "#cbd5e0", fontSize: "1rem", lineHeight: 1.75 }}>
+            <h3 style={{ margin: "0 0 10px 0", fontSize: "1.5rem", fontWeight: "800", color: "white" }}>Conclusion</h3>
+            <p style={{ margin: 0, color: "#cbd5e0", fontSize: "1.3rem", lineHeight: 1.75 }}>
               Good posture does not mean being stiff, but keeping the body{" "}
               <strong style={{ color: "#36a7cf" }}>natural, balanced, and comfortable</strong>.
               Small habits today can have a big impact in the future.
