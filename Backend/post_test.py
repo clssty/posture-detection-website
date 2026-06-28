@@ -202,7 +202,9 @@ def overall_status(statuses):
 # =========================
 cap = cv2.VideoCapture(0)
 print("isOpened:", cap.isOpened())
-cap.set(cv2.CAP_PROP_FRAME_WIDTH,  1280)
+
+# Optional: set webcam resolution
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
 WINDOW = "Posture Lab — CA | SA | KA  [ESC to quit]"

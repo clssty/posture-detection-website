@@ -84,19 +84,25 @@ export default function IdealPostureAngel() {
       >
         {[
           {
-            value: "50°–55°",
+            value: "≥ 55°",
             label: "Ideal Craniovertebral Angle",
             color: "#2563eb",
+            fair: "Fair: 48° – 54°",
+            poor: "Poor: < 48°",
           },
           {
-            value: "50°–53°",
+            value: "≤ 50°",
             label: "Ideal Shoulder Angle",
             color: "#0ea5e9",
+            fair: "Fair: 50° – 54°",
+            poor: "Poor: > 54°",
           },
           {
-            value: "20°",
+            value: "~20°",
             label: "Ideal Kyphosis Angle",
             color: "#1d4ed8",
+            fair: "Fair: 21° – 40°",
+            poor: "Poor: > 40°",
           },
         ].map((stat, i) => (
           <div
@@ -110,6 +116,7 @@ export default function IdealPostureAngel() {
               minWidth: "360px",
             }}
           >
+            {/* Nilai ideal — ukuran sama dengan versi sebelumnya */}
             <div
               style={{
                 fontSize: "4rem",
@@ -120,6 +127,7 @@ export default function IdealPostureAngel() {
               {stat.value}
             </div>
 
+            {/* Label sudut */}
             <div
               style={{
                 fontSize: "1.25rem",
@@ -129,6 +137,37 @@ export default function IdealPostureAngel() {
               }}
             >
               {stat.label}
+            </div>
+
+            {/* Divider */}
+            <div
+              style={{
+                borderTop: "1.5px solid #e2e8f0",
+                margin: "14px 0 10px 0",
+              }}
+            />
+
+            {/* Fair */}
+            <div
+              style={{
+                fontSize: "1rem",
+                fontWeight: "600",
+                color: "#d97706",
+                marginBottom: "6px",
+              }}
+            >
+              &#9644; {stat.fair}
+            </div>
+
+            {/* Poor */}
+            <div
+              style={{
+                fontSize: "1rem",
+                fontWeight: "600",
+                color: "#dc2626",
+              }}
+            >
+              &#9644; {stat.poor}
             </div>
           </div>
         ))}
@@ -174,41 +213,58 @@ export default function IdealPostureAngel() {
     Understanding ideal posture measurements
   </h2>
 </div>
-        {/* SECTION 1 */}
+        {/* SECTION 1 — CA */}
         <PostureSection
           number="01"
           title="Craniovertebral Angle (CA)"
-          description="Measures head position relative to the neck and upper back. A smaller angle usually indicates forward head posture."
-          ideal="Ideal: ≥ 50°–55°"
-          bad="Poor posture: < 48°"
+          description="Measures head position relative to the neck and upper back. A smaller angle indicates forward head posture (FHP). Measured at C7 between the ear-to-C7 line and the horizontal plane."
+          ideal="Good: ≥ 55°"
+          fair="Fair: 48° – 54°"
+          bad="Poor: < 48°"
           image={cranioImg}
           imageAlt="Craniovertebral Angle"
           setSelectedImage={setSelectedImage}
         />
 
-        {/* SECTION 2 */}
+        {/* SECTION 2 — SA */}
         <PostureSection
           number="02"
-          title="Kyphosis Angle (KA)"
-          description="Measures upper back curvature. Excessive curvature may indicate kyphosis or hunchback posture."
-          ideal="Ideal: around 20°"
-          bad="Poor posture: > 40°"
-          image={kyphosisImg}
-          imageAlt="Kyphosis Angle"
+          title="Shoulder Angle (SA)"
+          description="Measures the inclination of the shoulder relative to the horizontal plane at C7. A larger angle indicates forward head and rounded shoulder posture."
+          ideal="Good: ≤ 50°"
+          fair="Fair: 50° – 54°"
+          bad="Poor: > 54°"
+          image={cranioImg}
+          imageAlt="Shoulder Angle"
           setSelectedImage={setSelectedImage}
           reverse
         />
 
-        {/* SECTION 3 */}
+        {/* SECTION 3 — KA */}
         <PostureSection
           number="03"
+          title="Kyphosis Angle (KA)"
+          description="Measures upper-back curvature between T1–T2 and T12–L1 vertebrae. Excessive curvature indicates thoracic kyphosis."
+          ideal="Good: ~20°"
+          fair="Fair: 21° – 40°"
+          bad="Poor: > 40°"
+          image={kyphosisImg}
+          imageAlt="Kyphosis Angle"
+          setSelectedImage={setSelectedImage}
+        />
+
+        {/* SECTION 4 — Long-Term Risk */}
+        <PostureSection
+          number="04"
           title="Long-Term Risk"
           description="Poor posture habits over time can lead to spinal imbalance, height loss appearance, and chronic pain."
           ideal="Maintains spinal balance"
+          fair="Monitor posture regularly"
           bad="Can cause posture deformities"
           image={riskImg}
           imageAlt="Long Term Risk"
           setSelectedImage={setSelectedImage}
+          reverse
         />
 
         {/* ── WHY IT MATTERS ── */}
@@ -505,6 +561,7 @@ function PostureSection({
   title,
   description,
   ideal,
+  fair,
   bad,
   image,
   imageAlt,
@@ -579,6 +636,7 @@ function PostureSection({
             gap: "12px",
           }}
         >
+          {/* Good */}
           <div
             style={{
               background: "#dcfce7",
@@ -592,6 +650,23 @@ function PostureSection({
             ✓ {ideal}
           </div>
 
+          {/* Fair — only shown if prop provided */}
+          {fair && (
+            <div
+              style={{
+                background: "#fef9c3",
+                padding: "16px 20px",
+                borderRadius: "14px",
+                fontWeight: "700",
+                fontSize: "1.25rem",
+                color: "#854d0e",
+              }}
+            >
+              &#9651; {fair}
+            </div>
+          )}
+
+          {/* Poor */}
           <div
             style={{
               background: "#fee2e2",
@@ -601,7 +676,7 @@ function PostureSection({
               fontSize: "1.25rem",
               color: "#991b1b",
             }}
-          >            
+          >
             ✕ {bad}
           </div>
         </div>
