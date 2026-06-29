@@ -4,25 +4,26 @@ import mediapipe as mp
 import numpy as np
 
 # =============================================================================
-# Referensi:
+# Reference:
 #   Vorapojpisut et al. (2025). Quantifying sitting posture: A pilot
 #   feasibility study of computer vision and wearable sensors (Posture Lab)
 #   using a manikin model. Wearable Technologies, 6, e27.
 #   doi:10.1017/wtc.2025.10005
 #
-# Landmark posisi mengacu pada Figure 10 & Figure 13:
-#   (1) Ear        → LEFT_EAR
-#   (2) C7         → estimasi titik tengah EAR ↔ SHOULDER (MediaPipe tidak
-#                    memiliki C7 eksplisit)
-#   (3) Shoulder   → LEFT_SHOULDER
-#   (4) T1–T2      → estimasi: shoulder + 25% jarak shoulder→hip ke bawah
-#   (5) T12–L1     → estimasi: shoulder + 75% jarak shoulder→hip ke bawah
+# CATATAN IMPLEMENTASI (tanpa physical markers):
+#   The original paper uses physical ArUco markers at C7 (spinous process),
+#   and accelerometers at T1–T2 and T12–L1—landmarks that do NOT exist in MediaPipe.
+#   Solution: A direct Ear-Shoulder-Hip approach using 3 accurate
+#   MediaPipe landmarks, with a valid angle redefinition:
 #
-# Definisi sudut (Figure 13):
-#   CA : sudut di C7 antara garis EAR→C7 dan garis HORIZONTAL
-#   SA : sudut di SHOULDER antara garis C7→SHOULDER dan garis HORIZONTAL
-#   KA : sudut di midpoint T1-T2/T12-L1 antara segmen T1T2→midspine
-#        dan midspine→T12L1 (kemiringan thoracic)
+#   CA : angle of the SHOULDER→EAR line relative to the HORIZONTAL
+#        (large = upright head; small = forward head posture)
+#   SA : angle of the HIP→SHOULDER line relative to the HORIZONTAL
+#        (large = upright torso; small = leaning forward)
+#   KA : angle at the SHOULDER between the SHOULDER→EAR and SHOULDER→HIP vectors
+#        (approaching 180° = straight posture; < 160° = bend at the shoulder)
+#
+# CAMERA POSITION: The LEFT side of the body must face the camera.
 # =============================================================================
 
 # =========================
@@ -52,20 +53,29 @@ BODY_CONNECTIONS = [
 ]
 
 # =========================
-# Ideal Angle Thresholds
-# (Sesuai materi IdealPostureAngel.tsx & paper Vorapojpisut 2025)
+# Angle Thresholds (simplified — no physical markers)
+# Disesuaikan untuk pendekatan EAR-SHOULDER-HIP langsung.
 # =========================
-# Craniovertebral Angle (CA) : Ideal >= 50°–55° | Poor < 48°
-CA_IDEAL_MIN = 50
-CA_POOR_MAX  = 48
+# CA : angle of SHOULDER→EAR from horizontal
+#   Good : >= 75°  (kepala tegak di atas bahu)
+#   Fair : 60°–74°
+#   Poor : < 60°   (forward head posture signifikan)
+CA_IDEAL_MIN = 75
+CA_FAIR_MIN  = 60
 
-# Shoulder Angle (SA)        : Ideal 50°–53°
-SA_IDEAL_MIN = 50
-SA_IDEAL_MAX = 53
+# SA : angle of HIP→SHOULDER from horizontal
+#   Good : >= 80°  (badan tegak)
+#   Fair : 65°–79°
+#   Poor : < 65°   (badan condong ke depan)
+SA_IDEAL_MIN = 80
+SA_FAIR_MIN  = 65
 
-# Kyphosis Angle (KA)        : Ideal ~20° | Poor > 40°
-KA_IDEAL_TARGET = 20
-KA_POOR_MIN     = 40
+# KA : angle at SHOULDER between EAR and HIP vectors
+#   Good : >= 160° (postur hampir lurus)
+#   Fair : 140°–159°
+#   Poor : < 140°  (tekukan signifikan di bahu)
+KA_IDEAL_MIN = 160
+KA_FAIR_MIN  = 140
 
 
 # =========================
@@ -73,35 +83,6 @@ KA_POOR_MIN     = 40
 # =========================
 def get_px(landmark, w, h):
     return (int(landmark.x * w), int(landmark.y * h))
-
-
-# =========================
-# Helper: estimasi C7
-# C7 (lower neck) = titik antara EAR dan SHOULDER.
-# Berdasarkan anatomi, C7 lebih dekat ke bahu (~70% dari ear ke shoulder).
-# =========================
-def estimate_c7(ear_px, shoulder_px, ratio=0.70):
-    x = int(ear_px[0] + ratio * (shoulder_px[0] - ear_px[0]))
-    y = int(ear_px[1] + ratio * (shoulder_px[1] - ear_px[1]))
-    return (x, y)
-
-
-# =========================
-# Helper: estimasi T1-T2 dan T12-L1
-# Menggunakan rasio jarak vertical shoulder→hip.
-#   T1-T2  ≈ 25% dari shoulder ke hip (punggung atas)
-#   T12-L1 ≈ 75% dari shoulder ke hip (punggung bawah)
-# =========================
-def estimate_thoracic(shoulder_px, hip_px):
-    t1t2 = (
-        int(shoulder_px[0] + 0.25 * (hip_px[0] - shoulder_px[0])),
-        int(shoulder_px[1] + 0.25 * (hip_px[1] - shoulder_px[1])),
-    )
-    t12l1 = (
-        int(shoulder_px[0] + 0.75 * (hip_px[0] - shoulder_px[0])),
-        int(shoulder_px[1] + 0.75 * (hip_px[1] - shoulder_px[1])),
-    )
-    return t1t2, t12l1
 
 
 # =========================
@@ -137,57 +118,61 @@ def angle_to_horizontal(from_pt, to_pt):
 
 
 # =========================
-# Hitung CA (Craniovertebral Angle)
-# Definisi paper: sudut di C7 antara garis EAR→C7 dan horizontal.
+# Hitung CA — Neck Inclination
+# Sudut garis SHOULDER→EAR terhadap horizontal.
+# Besar = kepala tegak (baik). Kecil = forward head posture (buruk).
 # =========================
-def compute_ca(ear_px, c7_px):
-    return angle_to_horizontal(c7_px, ear_px)
+def compute_ca(ear_px, shoulder_px):
+    return angle_to_horizontal(shoulder_px, ear_px)
 
 
 # =========================
-# Hitung SA (Shoulder Angle)
-# Definisi paper: sudut di SHOULDER antara garis C7→SHOULDER dan horizontal.
+# Hitung SA — Trunk Inclination
+# Sudut garis HIP→SHOULDER terhadap horizontal.
+# Besar = badan tegak (baik). Kecil = badan condong ke depan (buruk).
 # =========================
-def compute_sa(c7_px, shoulder_px):
-    return angle_to_horizontal(shoulder_px, c7_px)
+def compute_sa(shoulder_px, hip_px):
+    return angle_to_horizontal(hip_px, shoulder_px)
 
 
 # =========================
-# Hitung KA (Kyphosis Angle)
-# Definisi paper: sudut antara segmen T1-T2→mid dan mid→T12-L1.
-# mid = titik tengah T1T2 dan T12L1 (bisector).
+# Hitung KA — Posture Alignment Angle
+# Sudut di SHOULDER antara vektor SHOULDER→EAR dan SHOULDER→HIP.
+# ~180° = lurus (baik). < 140° = tekukan signifikan di bahu (buruk).
+# Bug lama: collinear points selalu menghasilkan 180°.
+# Fix: gunakan landmark berbeda (EAR, SHOULDER, HIP) sebagai vertex.
 # =========================
-def compute_ka(t1t2_px, t12l1_px):
-    mid = (
-        (t1t2_px[0] + t12l1_px[0]) // 2,
-        (t1t2_px[1] + t12l1_px[1]) // 2,
-    )
-    return angle_at_vertex(t1t2_px, mid, t12l1_px), mid
+def compute_ka(ear_px, shoulder_px, hip_px):
+    ka_label_px = (shoulder_px[0] + 10, shoulder_px[1] - 30)
+    return angle_at_vertex(ear_px, shoulder_px, hip_px), ka_label_px
 
 
 # =========================
 # Klasifikasi tiap sudut → status + warna BGR
 # =========================
 def classify_ca(angle):
+    """CA: Good >= 75° | Fair 60°-74° | Poor < 60°"""
     if angle >= CA_IDEAL_MIN:
         return "Good", (50, 205, 50)
-    elif angle < CA_POOR_MAX:
-        return "Poor", (50,  80, 220)
-    return "Fair", (30, 165, 245)
+    elif angle >= CA_FAIR_MIN:
+        return "Fair", (30, 165, 245)
+    return "Poor", (50, 80, 220)
 
 def classify_sa(angle):
-    if SA_IDEAL_MIN <= angle <= SA_IDEAL_MAX:
+    """SA: Good >= 80° | Fair 65°-79° | Poor < 65°"""
+    if angle >= SA_IDEAL_MIN:
         return "Good", (50, 205, 50)
-    elif angle < SA_IDEAL_MIN - 5 or angle > SA_IDEAL_MAX + 10:
-        return "Poor", (50,  80, 220)
-    return "Fair", (30, 165, 245)
+    elif angle >= SA_FAIR_MIN:
+        return "Fair", (30, 165, 245)
+    return "Poor", (50, 80, 220)
 
 def classify_ka(angle):
-    if abs(angle - KA_IDEAL_TARGET) <= 10:
+    """KA: Good >= 160° | Fair 140°-159° | Poor < 140°"""
+    if angle >= KA_IDEAL_MIN:
         return "Good", (50, 205, 50)
-    elif angle > KA_POOR_MIN:
-        return "Poor", (50,  80, 220)
-    return "Fair", (30, 165, 245)
+    elif angle >= KA_FAIR_MIN:
+        return "Fair", (30, 165, 245)
+    return "Poor", (50, 80, 220)
 
 def overall_status(statuses):
     if all(s == "Good" for s in statuses):
@@ -232,67 +217,48 @@ while True:
     if results.pose_landmarks:
         lm = results.pose_landmarks.landmark
 
-        # ── 1. Gambar koneksi tubuh (tanpa wajah) ────────────────────
-        for conn in BODY_CONNECTIONS:
-            pt_a = get_px(lm[conn[0]], w, h)
-            pt_b = get_px(lm[conn[1]], w, h)
-            cv2.line(frame, pt_a, pt_b, (170, 170, 170), 2)
+        # ── 1. Tidak ada skeleton ─────────────────────────────────────
+        # Hanya 3 landmark kunci (Ear, Shoulder, Hip) yang ditampilkan.
 
-        # Gambar landmark tubuh saja (tanpa wajah)
-        for idx, landmark in enumerate(lm):
-            if idx in FACE_LANDMARKS_HIDE:
-                continue   # skip landmark wajah
-            pt = get_px(landmark, w, h)
-            cv2.circle(frame, pt, 4, (200, 200, 200), -1)
-
-        # ── 2. Ambil landmark kunci ───────────────────────────────────
-        # (1) Ear
+        # ── 2. Ambil 3 landmark kunci ─────────────────────────────────
         ear_px      = get_px(lm[mp_pose.PoseLandmark.LEFT_EAR.value],      w, h)
-        # (3) Shoulder
         shoulder_px = get_px(lm[mp_pose.PoseLandmark.LEFT_SHOULDER.value], w, h)
-        # (5) Hip (sebagai batas bawah torso untuk estimasi T12-L1)
         hip_px      = get_px(lm[mp_pose.PoseLandmark.LEFT_HIP.value],      w, h)
 
-        # ── 3. Estimasi landmark yang tidak ada di MediaPipe ──────────
-        # (2) C7 : lower neck
-        c7_px        = estimate_c7(ear_px, shoulder_px, ratio=0.70)
-        # (4) T1-T2 dan (5) T12-L1
-        t1t2_px, t12l1_px = estimate_thoracic(shoulder_px, hip_px)
+        # ── 3. Hitung sudut (EAR-SHOULDER-HIP approach) ───────────────
+        # CA: inclination of SHOULDER→EAR from horizontal (neck tilt)
+        # SA: inclination of HIP→SHOULDER from horizontal (trunk tilt)
+        # KA: angle at SHOULDER vertex in EAR-SHOULDER-HIP (alignment)
+        ca_angle                = compute_ca(ear_px, shoulder_px)
+        sa_angle                = compute_sa(shoulder_px, hip_px)
+        ka_angle, ka_label_px   = compute_ka(ear_px, shoulder_px, hip_px)
 
-        # ── 4. Hitung sudut ───────────────────────────────────────────
-        ca_angle            = compute_ca(ear_px, c7_px)
-        sa_angle            = compute_sa(c7_px, shoulder_px)
-        ka_angle, ka_mid_px = compute_ka(t1t2_px, t12l1_px)
-
-        # ── 5. Klasifikasi ────────────────────────────────────────────
+        # ── 4. Klasifikasi ────────────────────────────────────────────
         ca_status, ca_color = classify_ca(ca_angle)
         sa_status, sa_color = classify_sa(sa_angle)
         ka_status, ka_color = classify_ka(ka_angle)
         overall, ov_color   = overall_status([ca_status, sa_status, ka_status])
 
-        # ── 6. Visualisasi garis pengukuran ───────────────────────────
+        # ── 5. Visualisasi garis pengukuran ───────────────────────────
 
-        # CA : garis EAR→C7 + garis horizontal dari C7
-        h_ref_ca = (c7_px[0] + 80, c7_px[1])          # titik horizontal kanan C7
-        cv2.line(frame, ear_px,    c7_px,    ca_color, 2)
-        cv2.line(frame, c7_px,     h_ref_ca, ca_color, 1)
+        # CA: segmen EAR→SHOULDER (area leher), referensi
+        # horizontal di SHOULDER
+        # Warna CA menandai garis leher dari telinga ke bahu.
+        h_ref_ca = (shoulder_px[0] + 70, shoulder_px[1])
+        cv2.line(frame, ear_px,      shoulder_px, ca_color, 2)
+        cv2.line(frame, shoulder_px, h_ref_ca,    ca_color, 1)
 
-        # SA : garis C7→SHOULDER + garis horizontal dari SHOULDER
-        h_ref_sa = (shoulder_px[0] + 80, shoulder_px[1])
-        cv2.line(frame, c7_px,       shoulder_px, sa_color, 2)
-        cv2.line(frame, shoulder_px, h_ref_sa,    sa_color, 1)
+        # SA: segmen SHOULDER→HIP (area trunk), referensi horizontal di SHOULDER
+        #     SA diukur sebagai inklinasi HIP→SHOULDER dari horizontal — vertex SHOULDER.
+        h_ref_sa = (shoulder_px[0] + 70, shoulder_px[1])
+        cv2.line(frame, shoulder_px, hip_px,   sa_color, 2)
+        cv2.line(frame, shoulder_px, h_ref_sa, sa_color, 1)
 
-        # KA : garis T1T2→mid dan mid→T12L1
-        cv2.line(frame, t1t2_px,  ka_mid_px, ka_color, 2)
-        cv2.line(frame, ka_mid_px, t12l1_px, ka_color, 2)
-
-        # ── 7. Gambar titik landmark kunci dengan warna & label ───────
+        # ── 6. Gambar 3 titik landmark kunci ─────────────────────────
         key_points = {
-            "Ear":    (ear_px,      (255, 215,   0)),   # emas
-            "C7":     (c7_px,       (0,   200, 200)),   # cyan
-            "Shldr":  (shoulder_px, (255, 100, 100)),   # merah muda
-            "T1-T2":  (t1t2_px,     (200, 100, 255)),   # ungu
-            "T12-L1": (t12l1_px,    (100, 255, 180)),   # hijau mint
+            "Ear":   (ear_px,      (0,  215, 255)),   # gold (BGR)
+            "Shldr": (shoulder_px, (80, 100, 255)),   # orange-red (BGR)
+            "Hip":   (hip_px,      (0,  200, 100)),   # green (BGR)
         }
         for label, (pt, col) in key_points.items():
             cv2.circle(frame, pt, 8, col, -1)
@@ -300,19 +266,29 @@ while True:
             cv2.putText(frame, label, (pt[0] + 10, pt[1] - 6),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.48, col, 1)
 
-        # Label sudut di dekat vertex masing-masing
-        cv2.putText(frame, f"CA={int(ca_angle)}", (c7_px[0] - 60, c7_px[1] - 10),
+        # ── Label sudut di posisi anatomis yang benar ─────────────────
+        # CA : di tengah EAR-SHOULDER → area LEHER (neck)
+        ca_label_x = (ear_px[0] + shoulder_px[0]) // 2 - 80
+        ca_label_y = (ear_px[1] + shoulder_px[1]) // 2
+        cv2.putText(frame, f"CA={int(ca_angle)}",
+                    (ca_label_x, ca_label_y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, ca_color, 2)
+
+        # SA : tepat di SHOULDER → area BAHU (sesuai nama "Shoulder Angle")
         cv2.putText(frame, f"SA={int(sa_angle)}",
-                    (shoulder_px[0] - 60, shoulder_px[1] + 20),
+                    (shoulder_px[0] - 80, shoulder_px[1] + 22),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, sa_color, 2)
+
+        # KA : di tengah SHOULDER-HIP → area TRUNK / punggung
+        ka_trunk_x = (shoulder_px[0] + hip_px[0]) // 2 + 12
+        ka_trunk_y = (shoulder_px[1] + hip_px[1]) // 2
         cv2.putText(frame, f"KA={int(ka_angle)}",
-                    (ka_mid_px[0] + 10, ka_mid_px[1]),
+                    (ka_trunk_x, ka_trunk_y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, ka_color, 2)
 
-        # ── 8. HUD Panel ─────────────────────────────────────────────
+        # ── 7. HUD Panel ─────────────────────────────────────────────
         overlay = frame.copy()
-        cv2.rectangle(overlay, (8, 8), (440, 190), (15, 15, 15), -1)
+        cv2.rectangle(overlay, (8, 8), (470, 210), (15, 15, 15), -1)
         cv2.addWeighted(overlay, 0.60, frame, 0.40, 0, frame)
 
         font_h = cv2.FONT_HERSHEY_DUPLEX
@@ -321,17 +297,22 @@ while True:
         cv2.putText(frame, overall, (18, 46), font_h, 1.1, ov_color, 2)
 
         cv2.putText(frame,
-            f"CA : {int(ca_angle):>3} deg  [{ca_status}]  Ideal >= 50",
-            (18,  88), font_n, 0.60, ca_color, 1)
+            f"CA : {int(ca_angle):>3} deg  [{ca_status}]  Good >= 75",
+            (18,  82), font_n, 0.58, ca_color, 1)
         cv2.putText(frame,
-            f"SA : {int(sa_angle):>3} deg  [{sa_status}]  Ideal 50-53",
-            (18, 118), font_n, 0.60, sa_color, 1)
+            f"SA : {int(sa_angle):>3} deg  [{sa_status}]  Good >= 80",
+            (18, 110), font_n, 0.58, sa_color, 1)
         cv2.putText(frame,
-            f"KA : {int(ka_angle):>3} deg  [{ka_status}]  Ideal ~20",
-            (18, 148), font_n, 0.60, ka_color, 1)
+            f"KA : {int(ka_angle):>3} deg  [{ka_status}]  Good >= 160",
+            (18, 138), font_n, 0.58, ka_color, 1)
+
+        # ── Catatan orientasi kamera ──────────────────────────────────
+        cv2.putText(frame,
+            "[!] Face your LEFT side toward the camera",
+            (18, 168), font_n, 0.48, (0, 200, 255), 1)
 
         cv2.putText(frame, "Ref: Vorapojpisut et al. 2025 (doi:10.1017/wtc.2025.10005)",
-            (18, 178), font_n, 0.38, (130, 130, 130), 1)
+            (18, 194), font_n, 0.36, (110, 110, 110), 1)
 
     # ── Resize ke window ─────────────────────────────────────────────
     try:
