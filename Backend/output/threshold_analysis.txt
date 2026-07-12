@@ -1,0 +1,107 @@
+======================================================================
+  DESCRIPTIVE STATISTICS PER LABEL
+======================================================================
+
+  [ERGONOMIC] — 2085 frames, 14 videos
+----------------------------------------------------------------------
+  Angle      Mean      Std      Min       Q1   Median       Q3      Max
+----------------------------------------------------------------------
+  CA         76.3     15.2      2.4     68.2     81.6     86.6     97.1
+  SA         98.2     15.8     43.9     97.6    101.8    107.6    118.6
+  KA        148.9     25.0     61.8    147.0    154.7    162.6    175.8
+
+  [SLIGHTLY] — 1399 frames, 14 videos
+----------------------------------------------------------------------
+  Angle      Mean      Std      Min       Q1   Median       Q3      Max
+----------------------------------------------------------------------
+  CA         53.7     13.5     11.0     44.3     51.7     63.2     90.0
+  SA         88.5      9.0     63.2     82.9     88.7     95.2    110.4
+  KA        145.1     10.8    113.8    136.5    143.9    152.3    179.4
+
+  [SLOUNCHED] — 1447 frames, 13 videos
+----------------------------------------------------------------------
+  Angle      Mean      Std      Min       Q1   Median       Q3      Max
+----------------------------------------------------------------------
+  CA         44.8     14.8      0.0     38.9     47.6     55.4     80.1
+  SA         82.8      7.6     62.2     78.5     83.8     88.2     97.6
+  KA        142.0     10.3    112.5    138.8    142.5    148.0    170.3
+
+======================================================================
+  THRESHOLD ANALYSIS
+======================================================================
+
+  Mean values per label:
+  Angle     ERGONOMIC     SLIGHTLY    SLOUNCHED
+--------------------------------------------------
+  CA             76.3         53.7         44.8
+  SA             98.2         88.5         82.8
+  KA            148.9        145.1        142.0
+
+  Threshold Calculation (midpoint between adjacent class means):
+----------------------------------------------------------------------
+
+  CA:
+    ERGONOMIC mean = 76.3°
+    SLIGHTLY  mean = 53.7°
+    SLOUNCHED mean = 44.8°
+    => IDEAL_MIN (Good/Fair boundary)  = (76.3 + 53.7) / 2 = 65.0 deg
+    => FAIR_MIN  (Fair/Poor boundary)   = (53.7 + 44.8) / 2 = 49.3 deg
+
+  SA:
+    ERGONOMIC mean = 98.2°
+    SLIGHTLY  mean = 88.5°
+    SLOUNCHED mean = 82.8°
+    => IDEAL_MIN (Good/Fair boundary)  = (98.2 + 88.5) / 2 = 93.4 deg
+    => FAIR_MIN  (Fair/Poor boundary)   = (88.5 + 82.8) / 2 = 85.7 deg
+
+  KA:
+    ERGONOMIC mean = 148.9°
+    SLIGHTLY  mean = 145.1°
+    SLOUNCHED mean = 142.0°
+    => IDEAL_MIN (Good/Fair boundary)  = (148.9 + 145.1) / 2 = 147.0 deg
+    => FAIR_MIN  (Fair/Poor boundary)   = (145.1 + 142.0) / 2 = 143.5 deg
+
+======================================================================
+  COMPARISON: OLD vs NEW THRESHOLDS
+======================================================================
+
+  Angle  Threshold     Old (hardcoded)       New (data)     Change
+----------------------------------------------------------------------
+  CA     IDEAL_MIN                 75°            65.0°     -10.0°
+         FAIR_MIN                  60°            49.3°     -10.7°
+
+  SA     IDEAL_MIN                 80°            93.4°     +13.4°
+         FAIR_MIN                  65°            85.7°     +20.7°
+
+  KA     IDEAL_MIN                160°           147.0°     -13.0°
+         FAIR_MIN                 140°           143.5°      +3.5°
+
+
+======================================================================
+  READY-TO-USE CODE (paste into post_test.py)
+======================================================================
+
+  # CA threshold (data-driven)
+  CA_IDEAL_MIN = 65.0
+  CA_FAIR_MIN  = 49.3
+
+  # SA threshold (data-driven)
+  SA_IDEAL_MIN = 93.4
+  SA_FAIR_MIN  = 85.7
+
+  # KA threshold (data-driven)
+  KA_IDEAL_MIN = 147.0
+  KA_FAIR_MIN  = 143.5
+
+======================================================================
+  VALIDATION — Classification Accuracy with New Thresholds
+======================================================================
+
+  [ERGONOMIC] expected=Good
+    Correct: 1511/2085 (72.5%)
+
+  [SLIGHTLY] expected=Fair
+    Correct: 299/1399 (21.4%)
+
+  [SLOUNCHED] expected=Poor
+    Correct: 1187/1447 (82.0%)

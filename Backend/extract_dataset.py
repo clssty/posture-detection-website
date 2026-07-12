@@ -8,14 +8,17 @@ Shoulder Angle (SA),
 Kyphosis Angle (KA)
 from posture videos into CSV dataset.
 
+Uses the SAME MediaPipe + angle logic as post_test.py
+via shared utilities in utils/.
 """
 
 import os
 import cv2
-import mediapipe as mp
-import numpy as np
 import pandas as pd
 from tqdm import tqdm
+
+from utils.angle_calculator import compute_ca, compute_sa, compute_ka
+from utils.mediapipe_utils import create_pose, extract_key_landmarks
 
 # ==================
 # Dataset Directory
@@ -32,20 +35,6 @@ OUTPUT_FILE = os.path.join(
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# =========================
-# MediaPipe Initialization
-# =========================
-
-mp_pose = mp.solutions.pose
-
-pose = mp_pose.Pose(
-    static_image_mode=False,
-    model_complexity=2,
-    smooth_landmarks=True,
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
-)
-
 # ==================
 # Dataset Container
 # ==================
@@ -61,7 +50,7 @@ def get_video_list():
     video_list = []
 
     # Nama folder = label
-    labels = ["ERGONOMIC", "SLIGHTLY", "SLOUCHED"]
+    labels = ["ERGONOMIC", "SLIGHTLY", "SLOUNCHED"]
 
     # Format video yang didukung
     supported_extensions = (
@@ -80,7 +69,7 @@ def get_video_list():
             print(f"[WARNING] Folder not found : {folder_path}")
             continue
 
-        for filename in os.listdir(folder_path):
+        for filename in sorted(os.listdir(folder_path)):
 
             if filename.lower().endswith(supported_extensions):
 
@@ -102,49 +91,145 @@ def get_video_list():
 # Process One Video
 # ==================
 
-def process_video(video_info):
+def process_video(video_info, pose):
+    """Process a single video: extract CA, SA, KA per frame.
+
+    Args:
+        video_info: Dict with 'label', 'video_name', 'video_path'.
+        pose: MediaPipe Pose instance.
+
+    Returns:
+        List of dicts, each containing one frame's data.
+    """
 
     video_path = video_info["video_path"]
-
     video_name = video_info["video_name"]
-
-    label = video_info["label"]
-
-    print(f"\nProcessing : {video_name}")
+    label      = video_info["label"]
 
     cap = cv2.VideoCapture(video_path)
 
     if not cap.isOpened():
-
-        print(f"[ERROR] Cannot open {video_name}")
-
-        return
-
-    fps = cap.get(cv2.CAP_PROP_FPS)
+        print(f"  [ERROR] Cannot open {video_name}")
+        return []
 
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-
+    fps = cap.get(cv2.CAP_PROP_FPS)
     duration = total_frames / fps if fps > 0 else 0
 
-    print(f"FPS          : {fps:.2f}")
+    print(f"\n  Processing : {video_name}")
+    print(f"  FPS        : {fps:.2f}")
+    print(f"  Frames     : {total_frames}")
+    print(f"  Duration   : {duration:.2f} sec")
 
-    print(f"Total Frames : {total_frames}")
+    video_data = []
+    detected = 0
+    skipped  = 0
 
-    print(f"Duration     : {duration:.2f} sec")
+    for frame_idx in tqdm(range(total_frames), desc=f"  {video_name}", leave=False):
+
+        success, frame = cap.read()
+        if not success:
+            break
+
+        h, w, _ = frame.shape
+
+        # Convert BGR → RGB for MediaPipe
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(rgb_frame)
+
+        # Extract landmarks
+        landmarks = extract_key_landmarks(results, w, h)
+
+        if landmarks is None:
+            skipped += 1
+            continue
+
+        ear_px, shoulder_px, hip_px = landmarks
+
+        # Compute angles — SAME formulas as post_test.py
+        ca_angle = compute_ca(ear_px, shoulder_px)
+        sa_angle = compute_sa(shoulder_px, hip_px)
+        ka_angle = compute_ka(ear_px, shoulder_px, hip_px)
+
+        video_data.append({
+            "label":      label,
+            "video_name": video_name,
+            "frame":      frame_idx,
+            "CA":         round(ca_angle, 2),
+            "SA":         round(sa_angle, 2),
+            "KA":         round(ka_angle, 2),
+        })
+
+        detected += 1
 
     cap.release()
 
+    print(f"  Detected   : {detected} frames")
+    print(f"  Skipped    : {skipped} frames (no landmark)")
+
+    return video_data
+
 # ======-----------------------------------------------------
-# Main / temporary testing - can change depends on the needs
+# Main
 # ======-----------------------------------------------------
 
 if __name__ == "__main__":
 
+    print("=" * 60)
+    print("  POSTURE DATASET EXTRACTION")
+    print("  Using MediaPipe Pose + EAR-SHOULDER-HIP angle logic")
+    print("=" * 60)
+
     videos = get_video_list()
 
-    print("=" * 50)
-    print(f"Total Videos : {len(videos)}")
+    print(f"\nTotal Videos : {len(videos)}")
 
+    if len(videos) == 0:
+        print("[ERROR] No videos found in dataset/ folder.")
+        exit(1)
+
+    # Create ONE MediaPipe Pose instance for all videos
+    pose = create_pose(static_image_mode=False, model_complexity=2)
+
+    # Process all videos
     for video in videos:
+        video_data = process_video(video, pose)
+        dataset.extend(video_data)
 
-        process_video(video)
+    # Close MediaPipe
+    pose.close()
+
+    # Save to CSV
+    if len(dataset) == 0:
+        print("\n[ERROR] No data extracted. Check your videos.")
+        exit(1)
+
+    df = pd.DataFrame(dataset)
+    df.to_csv(OUTPUT_FILE, index=False)
+
+    print("\n" + "=" * 60)
+    print(f"  DATASET SAVED : {OUTPUT_FILE}")
+    print(f"  Total Rows    : {len(df)}")
+    print("=" * 60)
+
+    # Print summary per label
+    print("\n  Summary per Label:")
+    print("-" * 60)
+
+    for label in df["label"].unique():
+        sub = df[df["label"] == label]
+        print(f"\n  [{label}] — {len(sub)} frames from "
+              f"{sub['video_name'].nunique()} videos")
+        print(f"    CA : mean={sub['CA'].mean():.1f}°  "
+              f"std={sub['CA'].std():.1f}°  "
+              f"range=[{sub['CA'].min():.1f}°, {sub['CA'].max():.1f}°]")
+        print(f"    SA : mean={sub['SA'].mean():.1f}°  "
+              f"std={sub['SA'].std():.1f}°  "
+              f"range=[{sub['SA'].min():.1f}°, {sub['SA'].max():.1f}°]")
+        print(f"    KA : mean={sub['KA'].mean():.1f}°  "
+              f"std={sub['KA'].std():.1f}°  "
+              f"range=[{sub['KA'].min():.1f}°, {sub['KA'].max():.1f}°]")
+
+    print("\n" + "=" * 60)
+    print("  Done! Run analyze_threshold.py next for threshold analysis.")
+    print("=" * 60)

@@ -60,22 +60,22 @@ BODY_CONNECTIONS = [
 #   Good : >= 75°  (kepala tegak di atas bahu)
 #   Fair : 60°–74°
 #   Poor : < 60°   (forward head posture signifikan)
-CA_IDEAL_MIN = 75
-CA_FAIR_MIN  = 60
+CA_IDEAL_MIN = 65
+CA_FAIR_MIN  = 49
 
 # SA : angle of HIP→SHOULDER from horizontal
 #   Good : >= 80°  (badan tegak)
 #   Fair : 65°–79°
 #   Poor : < 65°   (badan condong ke depan)
-SA_IDEAL_MIN = 80
-SA_FAIR_MIN  = 65
+SA_IDEAL_MIN = 93
+SA_FAIR_MIN  = 85
 
 # KA : angle at SHOULDER between EAR and HIP vectors
 #   Good : >= 160° (postur hampir lurus)
 #   Fair : 140°–159°
 #   Poor : < 140°  (tekukan signifikan di bahu)
-KA_IDEAL_MIN = 160
-KA_FAIR_MIN  = 140
+KA_IDEAL_MIN = 147
+KA_FAIR_MIN  = 143
 
 
 # =========================
