@@ -175,11 +175,13 @@ def classify_ka(angle):
     return "Poor", (50, 80, 220)
 
 def overall_status(statuses):
+    # Binary output: Good Posture vs Needs Improvement.
+    # Fair dan Poor keduanya memerlukan perbaikan postur;
+    # digabung karena kelas Fair sulit dibedakan secara reliabel
+    # dari kelas Poor dengan pendekatan threshold berbasis sudut ini.
     if all(s == "Good" for s in statuses):
-        return "Good Posture",  (50, 205, 50)
-    elif any(s == "Poor" for s in statuses):
-        return "Bad Posture",   (50,  80, 220)
-    return "Fair Posture",  (30, 165, 245)
+        return "Good Posture",      (50, 205, 50)   # hijau
+    return "Needs Improvement",  (30, 165, 245)     # biru
 
 
 # =========================
@@ -294,7 +296,9 @@ while True:
         font_h = cv2.FONT_HERSHEY_DUPLEX
         font_n = cv2.FONT_HERSHEY_SIMPLEX
 
-        cv2.putText(frame, overall, (18, 46), font_h, 1.1, ov_color, 2)
+        # Ukuran font diperkecil sedikit agar "Needs Improvement" tidak terpotong
+        ov_font_scale = 0.85 if overall == "Needs Improvement" else 1.1
+        cv2.putText(frame, overall, (18, 46), font_h, ov_font_scale, ov_color, 2)
 
         cv2.putText(frame,
             f"CA : {int(ca_angle):>3} deg  [{ca_status}]  Good >= 75",

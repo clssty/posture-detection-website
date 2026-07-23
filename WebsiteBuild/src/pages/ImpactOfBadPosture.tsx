@@ -6,11 +6,11 @@ import React from "react";
 //  IMAGE IMPORTS
 //  Letakkan file-file ini di src/assets/
 // ──────────────────────────────────────────────
-import muscularImg    from "../assets/B/musculoskeletal_pain.jpeg";
-import neckImg        from "../assets/B/Neck_Syndrome.png";
-import eyeImg         from "../assets/B/Eye_Problems.jpeg";
-import psychoImg      from "../assets/B/psycological_and_academic_effect.jpeg";
-import longTermImg    from "../assets/B/Long_Term_Risk.jpeg";
+import muscularImg from "../assets/B/musculoskeletal_pain.jpeg";
+import neckImg from "../assets/B/Text_Neck_Syndrom.jpeg";
+import eyeImg from "../assets/B/Eye_Problems.jpeg";
+import psychoImg from "../assets/B/psycological_and_academic_effect.jpeg";
+import longTermImg from "../assets/B/Long_Term_Risk.jpeg";
 
 // ──────────────────────────────────────────────
 //  TYPES
@@ -32,6 +32,7 @@ interface SectionData {
   imageHeight?: string;
   imageFit?: "cover" | "contain";
   imageScale?: number;
+  pictureSource?: string;
 }
 
 // ──────────────────────────────────────────────
@@ -57,6 +58,7 @@ const sections: SectionData[] = [
 
     imageWidth: "650px",
     imageHeight: "650px",
+    pictureSource: "https://www.orlincohen.com/news/risks-of-prolonged-sitting/",
   },
   {
     number: "2",
@@ -79,6 +81,7 @@ const sections: SectionData[] = [
 
     imageFit: "contain",
     imageScale: 1,
+    pictureSource: "https://www.healthandme.com/health-wellness/what-is-the-text-neck-syndrome-article-151581571",
   },
   {
     number: "3",
@@ -98,6 +101,7 @@ const sections: SectionData[] = [
 
     imageWidth: "650px",
     imageHeight: "580px",
+    pictureSource: "http://smile.lion.co.jp/column/eye_strain/article03.htm",
   },
   {
     number: "4",
@@ -121,6 +125,7 @@ const sections: SectionData[] = [
 
     imageWidth: "650px",
     imageHeight: "580px",
+    pictureSource: "https://www.independent.co.uk/student/student-life/university-uni-guide-anxiety-stress-b2409230.html",
   },
   {
     number: "5",
@@ -140,6 +145,7 @@ const sections: SectionData[] = [
 
     imageWidth: "650px",
     imageHeight: "580px",
+    pictureSource: "https://sunsetchiropractor.com/en/neurology-of-posture-spinal-alignment-and-scoliosis/",
   },
 ];
 
@@ -199,18 +205,18 @@ function BulletList({ items, accent }: { items: BulletItem[]; accent: string }) 
 }
 
 /** Full section: text + image alternating layout */
-function ImpactSection({ 
+function ImpactSection({
   data,
   setSelectedImage
-}: { 
-  data: SectionData; 
+}: {
+  data: SectionData;
   setSelectedImage: React.Dispatch<
-    React.SetStateAction<{ 
-      src: string; 
-      alt: string 
+    React.SetStateAction<{
+      src: string;
+      alt: string
     } | null>
   >;
- }) {
+}) {
   const [hovered, setHovered] = useState(false);
 
   const textBlock = (
@@ -248,6 +254,29 @@ function ImpactSection({
       <div style={{ width: "48px", height: "3px", background: data.accent, borderRadius: "4px" }} />
 
       <BulletList items={data.items} accent={data.accent} />
+
+      {/* Bottom divider + picture source */}
+      {data.pictureSource && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ width: "48px", height: "3px", background: data.accent, borderRadius: "4px" }} />
+          <a
+            href={data.pictureSource}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: "1.1rem",
+              color: data.accent,
+              textDecoration: "none",
+              fontWeight: "500",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.textDecoration = "underline"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.textDecoration = "none"; }}
+          >
+            Picture source
+          </a>
+        </div>
+      )}
     </div>
   );
 
@@ -278,11 +307,11 @@ function ImpactSection({
       <img
         src={data.imgSrc}
         alt={data.imgAlt}
-        style={{ 
+        style={{
           width: "100%",
           height: data.imageHeight || "520px",
           objectFit: data.imageFit || "cover",
-          transform: `scale(${data.imageScale ||1})`,
+          transform: `scale(${data.imageScale || 1})`,
           display: "block"
         }}
       />
@@ -331,7 +360,7 @@ export default function ImpactOfBadPosture() {
       {/* ── HERO BANNER ── */}
       <div
         style={{
-          background:"linear-gradient(135deg, #ef4444 0%, #fef3f0 70%, #ffffff 100%)",
+          background: "linear-gradient(135deg, #ef4444 0%, #fef3f0 70%, #ffffff 100%)",
           padding: "56px 64px 48px 64px",
           textAlign: "center",
         }}
@@ -466,10 +495,10 @@ export default function ImpactOfBadPosture() {
         {/* All sections */}
         {sections.map((section, i) => (
           <React.Fragment key={i}>
-            <ImpactSection 
-            data={section}
-            setSelectedImage={setSelectedImage}
-             />
+            <ImpactSection
+              data={section}
+              setSelectedImage={setSelectedImage}
+            />
             {i < sections.length - 1 && (
               <div style={{ height: "1px", background: "#e2e8f0" }} />
             )}
@@ -494,7 +523,7 @@ export default function ImpactOfBadPosture() {
             textTransform: "uppercase",
             marginBottom: "20px",
           }}>
-          Fun Facts
+            Fun Facts
           </div>
           <h2 style={{ margin: "0 0 32px 0", fontSize: "1.6rem", fontWeight: "800", color: "#1a202c" }}>
             The numbers behind the problem
@@ -512,7 +541,7 @@ export default function ImpactOfBadPosture() {
                 border: "#f4b400",
               },
               {
-                
+
                 text: "More than 80% of adolescents experience body pain from posture",
                 hoverBg: "#dbeafe",
                 border: "#1d4ed8",
@@ -558,7 +587,7 @@ export default function ImpactOfBadPosture() {
                 </p>
               </div>
             ))}
-          
+
           </div>
         </div>
 
@@ -613,7 +642,7 @@ export default function ImpactOfBadPosture() {
           onMouseLeave={() => setHoveredBtn(null)}
           style={navBtn(hoveredBtn === "home", false)}
         >
-        Home
+          Home
         </button>
         <div style={{ flex: 1 }} />
         <button

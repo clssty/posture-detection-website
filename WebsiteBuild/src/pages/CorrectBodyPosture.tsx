@@ -5,7 +5,6 @@ import React from "react";
 // ──────────────────────────────────────────────
 //  IMAGE IMPORTS
 // ──────────────────────────────────────────────
-import standingImg from "../assets/A/Standing_Posture_Good.jpeg";
 import sittingImg from "../assets/A/Sitting_Posture_Good.jpg";
 import spineImg from "../assets/A/Spine_Alignment.png";
 
@@ -19,13 +18,13 @@ interface CheckItem {
 // ──────────────────────────────────────────────
 //  DATA
 // ──────────────────────────────────────────────
-const standingChecks: CheckItem[] = [
-  { text: "Head aligned (not pushed forward)" },
-  { text: "Shoulders relaxed (not rounded)" },
-  { text: "Spine upright with natural curves" },
-  { text: "Hips aligned" },
-  { text: "Knees slightly relaxed (not locked)" },
-  { text: "Weight evenly distributed" },
+const sittingCompareChecks: CheckItem[] = [
+  { text: "Back straight with lumbar support" },
+  { text: "Head neutral — not pushed forward" },
+  { text: "Shoulders relaxed, not rounded" },
+  { text: "Avoid crossing legs or slouching" },
+  { text: "Sit fully back in the chair" },
+  { text: "Keep core lightly engaged" },
 ];
 
 const sittingChecks: CheckItem[] = [
@@ -97,6 +96,9 @@ function PostureSection({
   onImageClick,
   imageWidth = "480px",
   imageHeight = "auto",
+  imageObjectFit = "cover" as React.CSSProperties["objectFit"],
+  note,
+  pictureSource,
 }: {
   number: string;
   title: string;
@@ -109,6 +111,9 @@ function PostureSection({
   onImageClick?: (img: string) => void;
   imageWidth?: string;
   imageHeight?: string;
+  imageObjectFit?: React.CSSProperties["objectFit"];
+  note?: string;
+  pictureSource?: string;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -133,6 +138,44 @@ function PostureSection({
       <div style={{ width: "48px", height: "3px", background: accent, borderRadius: "4px" }} />
 
       <CheckList items={items} />
+
+      {/* Bottom divider + note + picture source */}
+      {(note || pictureSource) && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {/* Blue bottom divider line */}
+          <div style={{ width: "48px", height: "3px", background: accent, borderRadius: "4px" }} />
+
+          {note && (
+            <p style={{
+              margin: 0,
+              fontSize: "1.1rem",
+              color: "#4a5568",
+              lineHeight: 1.6,
+            }}>
+              {note}
+            </p>
+          )}
+
+          {pictureSource && (
+            <a
+              href={pictureSource}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontSize: "1.1rem",
+                color: accent,
+                textDecoration: "none",
+                fontWeight: "500",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.textDecoration = "underline"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.textDecoration = "none"; }}
+            >
+              Picture source
+            </a>
+          )}
+        </div>
+      )}
     </div>
   );
 
@@ -151,6 +194,10 @@ function PostureSection({
         transform: hovered ? "translateY(-4px)" : "translateY(0)",
         maxWidth: imageWidth,
         height: imageHeight,
+        background: imageObjectFit === "contain" ? "#f8fafc" : undefined,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <img
@@ -159,10 +206,11 @@ function PostureSection({
         onClick={() => onImageClick?.(imgSrc)}
         style={{
           width: "100%",
-          height: "100%",
-          objectFit: "cover",
+          height: imageObjectFit === "contain" ? "auto" : "100%",
+          objectFit: imageObjectFit,
           display: "block",
           cursor: "pointer",
+          borderRadius: "20px",
         }}
       />
     </div>
@@ -230,15 +278,15 @@ export default function CorrectBodyPosture() {
           >
             Correct Body Posture
           </h1>
-        </div>        
-        <p style={{ 
-          margin: "0 auto", 
-          fontSize: "1.5rem", 
-          color: "#4a5568", 
-          lineHeight: 1.9, 
-          maxWidth: "1100px" 
-          }}>
-          Correct posture is the position of the body when standing, sitting, or moving while <strong>maintaining the natural curve of the spine</strong>, so the body does not experience excessive strain.
+        </div>
+        <p style={{
+          margin: "0 auto",
+          fontSize: "1.5rem",
+          color: "#4a5568",
+          lineHeight: 1.9,
+          maxWidth: "1100px"
+        }}>
+          Correct sitting posture means positioning your body while seated to <strong>maintain the spine's natural curve</strong>, reduce muscle tension, and prevent musculoskeletal strain during prolonged sitting.
         </p>
       </div>
 
@@ -263,10 +311,10 @@ export default function CorrectBodyPosture() {
             textTransform: "uppercase",
             marginBottom: "12px",
           }}>
-            Characteristics of Good Posture
+            Characteristics of Good Sitting Posture
           </div>
           <h2 style={{ margin: 0, fontSize: "2.5rem", fontWeight: "800", color: "#1a6f93" }}>
-            Three pillars to know
+            Two key aspects to know
           </h2>
         </div>
 
@@ -278,54 +326,40 @@ export default function CorrectBodyPosture() {
           }}
         />
 
-        {/* ── 1. STANDING ── */}
+        {/* ── 1. CORRECT SITTING POSITION ── */}
         <PostureSection
           number="1"
-          title="When Standing"
-          description="Proper standing alignment keeps your joints stacked, muscles balanced, and energy at its peak throughout the day."
-          items={standingChecks}
-          imgSrc={standingImg}
-          imgAlt="Standing posture comparison — good vs poor"
-          imgRight={false}
-          accent="#36a7cf"
-          onImageClick={setSelectedImage}
-          imageWidth="650px"
-          imageHeight="600px"
-        />
-
-        {/* Thin divider */}
-        <div style={{ height: "1px", background: "#e2e8f0" }} />
-
-        {/* ── 2. SITTING ── */}
-        <PostureSection
-          number="2"
-          title="When Sitting"
-          description="With most of us spending hours at a desk, sitting posture directly affects your spine, circulation, and focus."
+          title="Correct Sitting Position"
+          description="An ergonomically correct sitting position keeps your spine aligned, reduces pressure on discs, and improves circulation and focus during long sessions."
           items={sittingChecks}
           imgSrc={sittingImg}
           imgAlt="Correct sitting posture at a desk"
-          imgRight={true}
+          imgRight={false}
           accent="#36a7cf"
           onImageClick={setSelectedImage}
           imageWidth="800px"
           imageHeight="480px"
+          pictureSource="https://www.gechic.com/cn/how-to-improve-sitting-posture-while-working-on-a-laptop/"
         />
 
         <div style={{ height: "1px", background: "#e2e8f0" }} />
 
-        {/* ── 3. SPINE ALIGNMENT ── */}
+        {/* ── 2. SPINE ALIGNMENT ── */}
         <PostureSection
-          number="3"
-          title="Spine Alignment (Key Element)"
-          description="The spine's natural S-curve is the foundation of every good posture. Protect it and your whole body benefits."
+          number="2"
+          title="Spine Alignment While Seated"
+          description="Maintaining the spine's natural S-curve while sitting is essential. Slouching collapses this curve, increasing disc pressure and causing chronic pain."
           items={spineChecks}
           imgSrc={spineImg}
-          imgAlt="Spine alignment — cervical, thoracic and lumbar curves"
-          imgRight={false}
+          imgAlt="Spine alignment — cervical, thoracic and lumbar curves while seated"
+          imgRight={true}
           accent="#36a7cf"
           onImageClick={setSelectedImage}
           imageWidth="650px"
-          imageHeight="580px"
+          imageHeight="auto"
+          imageObjectFit="contain"
+          note="Note: The cervical spine anatomically consists of seven vertebrae (C1–C7). In this illustration, only six are clearly visible because C1 is partially obscured by the skull"
+          pictureSource="https://www.anthros.com/blog-pain/biomechanics-of-good-posture"
         />
 
         {/* ── FUN FACTS ── */}
@@ -446,7 +480,7 @@ export default function CorrectBodyPosture() {
           onMouseLeave={() => setHoveredBtn(null)}
           style={navBtn(hoveredBtn === "home", false)}
         >
-         Home
+          Home
         </button>
         <div style={{ flex: 1 }} />
         <button
@@ -460,45 +494,45 @@ export default function CorrectBodyPosture() {
       </div>
 
       {/* ── FOOTER ── */}
-<footer style={{ background: "#36a7cf", color: "white", padding: "20px 60px", fontSize: "0.95rem" }}>
-  2026
-</footer>
+      <footer style={{ background: "#36a7cf", color: "white", padding: "20px 60px", fontSize: "0.95rem" }}>
+        2026
+      </footer>
 
-{/* ===== IMAGE MODAL ===== */}
-{selectedImage && (
-  <div
-    onClick={() => setSelectedImage(null)}
-    style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: "rgba(0,0,0,0.85)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 9999,
-      padding: "20px",
-      cursor: "pointer",
-    }}
-  >
-    <img
-      src={selectedImage}
-      alt="Preview"
-      onClick={(e) => e.stopPropagation()}
-      style={{
-        maxWidth: "90%",
-        maxHeight: "90%",
-        borderRadius: "18px",
-        boxShadow: "0 0 30px rgba(0,0,0,0.4)",
-      }}
-    />
-  </div>
-)}
+      {/* ===== IMAGE MODAL ===== */}
+      {selectedImage && (
+        <div
+          onClick={() => setSelectedImage(null)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.85)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+            padding: "20px",
+            cursor: "pointer",
+          }}
+        >
+          <img
+            src={selectedImage}
+            alt="Preview"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: "90%",
+              maxHeight: "90%",
+              borderRadius: "18px",
+              boxShadow: "0 0 30px rgba(0,0,0,0.4)",
+            }}
+          />
+        </div>
+      )}
 
-</div>
-);
+    </div>
+  );
 }
 
 // ──────────────────────────────────────────────

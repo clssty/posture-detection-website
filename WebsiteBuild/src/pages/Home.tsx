@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div style={{ fontFamily: "sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      
+
       {/* ===== NAVBAR ===== */}
       <header style={{ background: "#f4f4f4", padding: "16px 40px" }}>
         <span style={{ color: "black", fontWeight: "bold", fontSize: "1rem" }}>Logo</span>
@@ -18,17 +18,17 @@ export default function Home() {
 
       {/* ===== HERO SECTION ===== */}
       <main style={{ flex: 1, padding: "60px 60px 40px 60px", background: "#ffffff" }}>
-        
+
         {/* Hero atas */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "60px" }}>
-          
+
           {/* Judul Besar */}
           <h1 style={{ fontSize: "5.5rem", fontWeight: "900", lineHeight: 1.05, margin: 0, maxWidth: "52%" }}>
-            Smart Posture Analysis for Better Well-Being
+            Sitting Posture Analysis for Better Well-Being
           </h1>
 
           {/* Deskripsi + Tombol */}
-          <div style={{ maxWidth: "40%", display: "flex", flexDirection: "column", gap: "24px" }}>
+          <div style={{ maxWidth: "40%", display: "flex", flexDirection: "column", gap: "50px" }}>
             <p style={{ fontWeight: "700", fontSize: "1.3rem", margin: 0, lineHeight: 1.5 }}>
               Analyze your body posture in real-time and discover how small adjustments can improve comfort, confidence, and long-term health.
             </p>
@@ -72,7 +72,7 @@ export default function Home() {
             borderRadius: "0px",
             marginTop: "40px",
           }}
-          >
+        >
           {/* ===== CARDS SECTION ===== */}
           <div style={{ display: "flex", gap: "24px", alignItems: "stretch" }}>
 
@@ -140,7 +140,7 @@ export default function Home() {
                     color: hoveredCard === "A" ? "white" : "black",
                     margin: 0,
                     fontSize: "1.3rem",
-                    fontWeight: "bold", 
+                    fontWeight: "bold",
                     lineHeight: "1.3",
                   }}
                 >
@@ -157,8 +157,8 @@ export default function Home() {
                   margin: 0,
                 }}
               >
-                Understand the fundamentals of healthy posture through
-                proper sitting, standing, and spine alignment.
+                Understand the fundamentals of healthy sitting posture,
+                proper spinal alignment, and ergonomic positioning while seated.
               </p>
             </div>
 
