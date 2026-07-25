@@ -485,7 +485,7 @@ export default function ImpactOfBadPosture() {
             textTransform: "uppercase",
             marginBottom: "12px",
           }}>
-            6 Key Impacts to Understand
+            5 Key Impacts to Understand
           </div>
           <h2 style={{ margin: 0, fontSize: "2.5rem", fontWeight: "800", color: "#1a202c" }}>
             What bad posture does to your body & mind
