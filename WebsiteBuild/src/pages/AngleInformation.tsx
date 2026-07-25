@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import cranioImg from "../assets/C/Craniovertebral_Angle.jpeg";
 import kyphosisImg from "../assets/C/Kyphosis_Angle.jpeg";
+import shoulderImg from "../assets/C/Shoulder_Angle.png";
 
 // ──────────────────────────────────────────────
 //  TYPES
@@ -24,6 +25,7 @@ interface AngleSectionData {
   cardColor2: string;
   textColor1: string;
   textColor2: string;
+  pictureSource?: string;
 }
 
 // ──────────────────────────────────────────────
@@ -50,6 +52,7 @@ const angleSections: AngleSectionData[] = [
     cardColor2: "#fef3c7",
     textColor1: "#1e40af",
     textColor2: "#92400e",
+    pictureSource: "https://www.researchgate.net/publication/284018894_Evaluation_of_forward_head_posture_in_sitting_and_standing_positions",
   },
   {
     number: "02",
@@ -62,8 +65,8 @@ const angleSections: AngleSectionData[] = [
       "The angle between the Hip→Shoulder direction vector and the horizontal axis, measured at the Left Shoulder as the vertex reference.",
     whyMatters:
       "SA captures torso inclination during sitting. A forward-leaning torso increases compressive load on the lumbar spine and activates compensatory muscle tension in the shoulders and upper back.",
-    image: cranioImg,
-    imageAlt: "Shoulder Angle diagram",
+    image: shoulderImg,
+    imageAlt: "Shoulder Angle (SA) diagram",
     reverse: true,
     accentColor: "#0891b2",
     badgeColor: "#cffafe",
@@ -92,6 +95,7 @@ const angleSections: AngleSectionData[] = [
     cardColor2: "#fef3c7",
     textColor1: "#4c1d95",
     textColor2: "#92400e",
+    pictureSource: "https://www.performancehealth.com/articles/how-to-treat-your-kyphosis-exercises-and-supports?srsltid=AfmBOorTrhaMvA9jT_DPWZf5vwsGEqRjBlZ2fy70x6Om3B7EEndfRh7A",
   },
 ];
 
@@ -143,7 +147,7 @@ function AngleSection({
       <h2
         style={{
           margin: 0,
-          fontSize: "2.4rem",
+          fontSize: "2.5rem",
           fontWeight: "800",
           color: "#0f172a",
           lineHeight: 1.2,
@@ -158,7 +162,7 @@ function AngleSection({
           margin: 0,
           color: "#475569",
           lineHeight: 1.75,
-          fontSize: "1.15rem",
+          fontSize: "1.5rem",
         }}
       >
         {data.description}
@@ -195,9 +199,9 @@ function AngleSection({
               marginBottom: "8px",
             }}
           >
-            📐 What is Measured
+            What is Measured
           </div>
-          <div style={{ color: "#1e293b", fontSize: "1.05rem", lineHeight: 1.65 }}>
+          <div style={{ color: "#1e293b", fontSize: "1.25rem", lineHeight: 1.65 }}>
             {data.whatMeasured}
           </div>
         </div>
@@ -221,13 +225,36 @@ function AngleSection({
               marginBottom: "8px",
             }}
           >
-            💡 Why It Matters
+            Why It Matters
           </div>
           <div style={{ color: "#1e293b", fontSize: "1.05rem", lineHeight: 1.65 }}>
             {data.whyMatters}
           </div>
         </div>
       </div>
+
+      {/* Picture source link */}
+      {data.pictureSource && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ width: "48px", height: "3px", background: data.accentColor, borderRadius: "4px" }} />
+          <a
+            href={data.pictureSource}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: "1.1rem",
+              color: data.accentColor,
+              textDecoration: "none",
+              fontWeight: "500",
+              display: "inline-block",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.textDecoration = "underline"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.textDecoration = "none"; }}
+          >
+            Picture source
+          </a>
+        </div>
+      )}
     </div>
   );
 
