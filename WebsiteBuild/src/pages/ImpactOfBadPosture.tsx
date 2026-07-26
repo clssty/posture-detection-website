@@ -185,7 +185,74 @@ function navBtn(hovered: boolean, isPrimary: boolean): React.CSSProperties {
 //  SUB-COMPONENTS
 // ──────────────────────────────────────────────
 
-/** Bullet list with coloured dot */
+const REFERENCE_URL = "https://www.sciencedirect.com/science/article/pii/S1524904220302381";
+
+/** Clickable stat box with pop-up hover effect */
+function StatCard({ stat }: { stat: { value: string; label: string; color: string } }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onClick={() => window.open(REFERENCE_URL, "_blank", "noopener,noreferrer")}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        background: hovered ? stat.color + "0d" : "white",
+        borderRadius: "18px",
+        padding: "26px 36px",
+        boxShadow: hovered
+          ? `0 24px 52px ${stat.color}40, 0 4px 16px rgba(0,0,0,0.08)`
+          : "0 10px 30px rgba(0,0,0,0.10)",
+        borderTop: `4px solid ${stat.color}`,
+        minWidth: "360px",
+        cursor: "pointer",
+        transform: hovered ? "translateY(-10px) scale(1.04)" : "translateY(0) scale(1)",
+        transition: "transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease, background 0.25s ease",
+        position: "relative",
+        userSelect: "none",
+      }}
+    >
+      <div
+        style={{
+          fontSize: "4rem",
+          fontWeight: "900",
+          color: stat.color,
+        }}
+      >
+        {stat.value}
+      </div>
+
+      <div
+        style={{
+          fontSize: "1.25rem",
+          color: "#718096",
+          marginTop: "4px",
+          lineHeight: 1.5,
+        }}
+      >
+        {stat.label}
+      </div>
+
+      {/* Hover hint */}
+      <div
+        style={{
+          marginTop: "14px",
+          fontSize: "0.82rem",
+          fontWeight: "600",
+          color: stat.color,
+          opacity: hovered ? 1 : 0,
+          transform: hovered ? "translateY(0)" : "translateY(4px)",
+          transition: "opacity 0.2s ease, transform 0.2s ease",
+          letterSpacing: "0.04em",
+        }}
+      >
+        View Source
+      </div>
+    </div>
+  );
+}
+
+
 function BulletList({ items, accent }: { items: BulletItem[]; accent: string }) {
   return (
     <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -433,38 +500,7 @@ export default function ImpactOfBadPosture() {
             color: "#dc2626",
           },
         ].map((stat, i) => (
-          <div
-            key={i}
-            style={{
-              background: "white",
-              borderRadius: "18px",
-              padding: "26px 36px",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.10)",
-              borderTop: `4px solid ${stat.color}`,
-              minWidth: "360px",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "4rem",
-                fontWeight: "900",
-                color: stat.color,
-              }}
-            >
-              {stat.value}
-            </div>
-
-            <div
-              style={{
-                fontSize: "1.25rem",
-                color: "#718096",
-                marginTop: "4px",
-                lineHeight: 1.5,
-              }}
-            >
-              {stat.label}
-            </div>
-          </div>
+          <StatCard key={i} stat={stat} />
         ))}
       </div>
 
