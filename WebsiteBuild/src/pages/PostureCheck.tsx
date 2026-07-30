@@ -134,12 +134,9 @@ export default function PostureCheck() {
   const [data, setData] = useState<PostureData>({ detected: false });
   const [checkingConn, setCheckingConn] = useState(true);
 
-  // Show form modal once per session
-  const [showFormModal, setShowFormModal] = useState<boolean>(
-    () => sessionStorage.getItem("formModalDismissed") !== "true"
-  );
+  // Show form modal every time the page is visited
+  const [showFormModal, setShowFormModal] = useState<boolean>(true);
   const dismissModal = () => {
-    sessionStorage.setItem("formModalDismissed", "true");
     setShowFormModal(false);
   };
 
@@ -596,7 +593,7 @@ export default function PostureCheck() {
               onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
               onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
             >
-              Open Google Form
+              Open Form
             </a>
 
             {/* Dismiss button */}
