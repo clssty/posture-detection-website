@@ -72,7 +72,7 @@ function AngleBadge({
           marginBottom: "8px",
         }}
       >
-        <span style={{ fontWeight: 700, fontSize: "1rem", color: "#1e293b" }}>
+        <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "#1e293b" }}>
           {label}
         </span>
         {status && (
@@ -207,7 +207,7 @@ export default function PostureCheck() {
       style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%)",
-        fontFamily: "'Inter', 'Segoe UI', sans-serif",
+        fontFamily: "sans-serif",
         display: "flex",
         flexDirection: "column",
       }}
@@ -447,25 +447,25 @@ export default function PostureCheck() {
 
             {/* Angle badges */}
             <AngleBadge
-              label="CA — Neck Inclination"
+              label="CA"
               angle={data.ca}
               status={data.ca_status}
               goodMin={75}
-              description="Angle of Shoulder→Ear from horizontal. Large = upright head."
+              description="Angle of Shoulder : Ear from horizontal. Large = upright head."
             />
             <AngleBadge
-              label="SA — Trunk Inclination"
+              label="SA"
               angle={data.sa}
               status={data.sa_status}
               goodMin={80}
-              description="Angle of Hip→Shoulder from horizontal. Large = upright torso."
+              description="Angle of Hip : Shoulder from horizontal. Large = upright torso."
             />
             <AngleBadge
-              label="KA — Alignment Angle"
+              label="KA"
               angle={data.ka}
               status={data.ka_status}
               goodMin={160}
-              description="Angle at Shoulder (Ear–Shoulder–Hip). ~180° = straight posture."
+              description={`Angle at Shoulder (Ear–Shoulder–Hip) ~180° = straight posture.`}
             />
 
             {/* Start / Stop button */}

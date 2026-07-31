@@ -605,9 +605,9 @@ export default function AngleInformation() {
                 <p
                   style={{
                     margin: 0,
-                    fontWeight: "600",
+                    fontWeight: "700",
                     color: "#1e293b",
-                    fontSize: "1.1rem",
+                    fontSize: "1.5rem",
                     lineHeight: 1.7,
                   }}
                 >
