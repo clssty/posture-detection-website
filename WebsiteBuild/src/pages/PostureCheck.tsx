@@ -46,13 +46,60 @@ function AngleBadge({
   status,
   goodMin,
   description,
+  analyzing,
 }: {
   label: string;
   angle?: number;
   status?: string;
   goodMin: number;
   description: string;
+  analyzing: boolean;
 }) {
+  // ── Pre-analysis idle state ──
+  if (!analyzing) {
+    return (
+      <div
+        style={{
+          background: "rgba(241,245,249,0.85)",
+          border: "1.5px solid #e2e8f0",
+          borderRadius: "16px",
+          padding: "18px 20px",
+          transition: "all 0.3s ease",
+        }}
+      >
+        {/* Large abbreviation */}
+        <div
+          style={{
+            fontSize: "2.4rem",
+            fontWeight: 900,
+            color: "#64748b",
+            lineHeight: 1,
+            marginBottom: "10px",
+          }}
+        >
+          {label}
+        </div>
+
+        {/* Description */}
+        <div style={{ fontSize: "0.78rem", color: "#64748b", lineHeight: 1.5 }}>
+          {description}
+        </div>
+
+        {/* Good threshold hint */}
+        <div
+          style={{
+            fontSize: "0.72rem",
+            color: "#94a3b8",
+            marginTop: "6px",
+          }}
+        >
+          Good ≥ {goodMin}°
+        </div>
+      </div>
+    );
+  }
+
+  // ── Active / live state ──
   return (
     <div
       style={{
@@ -64,32 +111,10 @@ function AngleBadge({
       }}
     >
       {/* Label row */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "8px",
-        }}
-      >
+      <div style={{ marginBottom: "8px" }}>
         <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "#1e293b" }}>
           {label}
         </span>
-        {status && (
-          <span
-            style={{
-              background: statusColor(status),
-              color: "#fff",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              padding: "3px 10px",
-              borderRadius: "99px",
-              letterSpacing: "0.05em",
-            }}
-          >
-            {status}
-          </span>
-        )}
       </div>
 
       {/* Angle value */}
@@ -452,6 +477,7 @@ export default function PostureCheck() {
               status={data.ca_status}
               goodMin={75}
               description="Angle of Shoulder : Ear from horizontal. Large = upright head."
+              analyzing={analyzing}
             />
             <AngleBadge
               label="SA"
@@ -459,6 +485,7 @@ export default function PostureCheck() {
               status={data.sa_status}
               goodMin={80}
               description="Angle of Hip : Shoulder from horizontal. Large = upright torso."
+              analyzing={analyzing}
             />
             <AngleBadge
               label="KA"
@@ -466,6 +493,7 @@ export default function PostureCheck() {
               status={data.ka_status}
               goodMin={160}
               description={`Angle at Shoulder (Ear–Shoulder–Hip) ~180° = straight posture.`}
+              analyzing={analyzing}
             />
 
             {/* Start / Stop button */}
