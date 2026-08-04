@@ -316,7 +316,7 @@ export default function Home() {
                     lineHeight: "1.3",
                   }}
                 >
-                  Ideal Posture Angle
+                  Angle Information
                 </h3>
               </div>
 
@@ -329,9 +329,7 @@ export default function Home() {
                   margin: 0,
                 }}
               >
-                Learn how posture angles such as head, shoulder,
-                and spinal alignment are used to evaluate healthy
-                body posture.
+                Contain information about three measurement angles (CA, SA and KA)
               </p>
             </div>
 
